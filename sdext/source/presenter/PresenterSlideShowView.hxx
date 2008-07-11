@@ -8,7 +8,7 @@
  *
  * $RCSfile: PresenterSlideShowView.hxx,v $
  *
- * $Revision: 1.4 $
+ * $Revision: 1.5 $
  *
  * This file is part of OpenOffice.org.
  *
@@ -88,6 +88,12 @@ public:
     void LateInit (void);
     virtual void SAL_CALL disposing (void);
 
+
+    // CachablePresenterView
+
+    virtual void ReleaseView (void);
+    
+    
     // XSlideShowView
     
     virtual css::uno::Reference<
