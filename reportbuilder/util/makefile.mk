@@ -110,10 +110,7 @@ COMPONENT_EXTJARFILES += \
     $(EXTENSIONDIR)$/librepository-1.0.0.jar					\
     $(EXTENSIONDIR)$/libxml-1.0.0.jar							\
     $(EXTENSIONDIR)$/flow-engine-0.9.2.jar 	                    \
-    $(EXTENSIONDIR)$/sac.jar
-.ENDIF
-.IF "$(SYSTEM_APACHE_COMMONS)" != "YES"
-COMPONENT_EXTJARFILES += \
+    $(EXTENSIONDIR)$/sac.jar                                 	\
     $(EXTENSIONDIR)$/commons-logging-1.1.1.jar
 .ENDIF
 
