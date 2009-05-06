@@ -1,7 +1,7 @@
 /*************************************************************************
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
- * 
+ *
  * Copyright 2008 by Sun Microsystems, Inc.
  *
  * OpenOffice.org - a multi-platform office productivity suite
@@ -62,8 +62,8 @@ namespace pdfi
 // TODO(T3): locking/thread safety
 
 namespace {
-    typedef ::cppu::WeakComponentImplHelper1< 
-        com::sun::star::awt::XDialogEventHandler > ChooserDialogHandlerBase; 
+    typedef ::cppu::WeakComponentImplHelper1<
+        com::sun::star::awt::XDialogEventHandler > ChooserDialogHandlerBase;
     class ChooserDialogHandler : private cppu::BaseMutex,
                                  public ChooserDialogHandlerBase
     {
@@ -147,9 +147,9 @@ namespace {
                 aLabel.indexOfAsciiL(pFileName,sizeof(pFileName)/sizeof(*pFileName)-1),
                 sizeof(pFileName)/sizeof(*pFileName)-1,
                 aFilename );
-            xPropSet->setPropertyValue(rtl::OUString( RTL_CONSTASCII_USTRINGPARAM( "Label" )), 
+            xPropSet->setPropertyValue(rtl::OUString( RTL_CONSTASCII_USTRINGPARAM( "Label" )),
                                        uno::makeAny(aLabel));
-    
+
             uno::Sequence<rtl::OUString> aListboxItems(3);
             aListboxItems[DRAW_INDEX]    = rtl::OUString( RTL_CONSTASCII_USTRINGPARAM( "Drawing" ));
             aListboxItems[IMPRESS_INDEX] = rtl::OUString( RTL_CONSTASCII_USTRINGPARAM( "Presentation" ));
@@ -165,8 +165,8 @@ namespace {
             return m_xListbox->getSelectedItemPos();
         }
 
-        virtual ::sal_Bool SAL_CALL callHandlerMethod( const uno::Reference< awt::XDialog >& /*xDialog*/, 
-                                                       const uno::Any& /*EventObject*/, 
+        virtual ::sal_Bool SAL_CALL callHandlerMethod( const uno::Reference< awt::XDialog >& /*xDialog*/,
+                                                       const uno::Any& /*EventObject*/,
                                                        const ::rtl::OUString& MethodName ) throw (lang::WrappedTargetException, uno::RuntimeException)
         {
             (void)MethodName;
@@ -183,17 +183,17 @@ namespace {
             return aMethods;
         }
     };
-
+#if 0 // code currently unused (see below)
     sal_Int32 queryDocumentTypeDialog( const uno::Reference<uno::XComponentContext>& xContext,
                                        const rtl::OUString&							 rFilename )
     {
         uno::Reference<awt::XDialogProvider2> xDialogProvider(
-            xContext->getServiceManager()->createInstanceWithContext( 
+            xContext->getServiceManager()->createInstanceWithContext(
                 rtl::OUString( RTL_CONSTASCII_USTRINGPARAM( "com.sun.star.awt.DialogProvider2" ) ),
-                xContext ),	
+                xContext ),
                 uno::UNO_QUERY_THROW );
         rtl::Reference<ChooserDialogHandler> xHandler(new ChooserDialogHandler);
-        uno::Reference<awt::XDialog> xDialog = xDialogProvider->createDialogWithHandler( 
+        uno::Reference<awt::XDialog> xDialog = xDialogProvider->createDialogWithHandler(
             rtl::OUString( RTL_CONSTASCII_USTRINGPARAM("vnd.sun.star.script:PDFImport.TargetChooser?location=application") ),
             uno::Reference<awt::XDialogEventHandler>(
             static_cast<cppu::OWeakObject*>(xHandler.get()), uno::UNO_QUERY_THROW));
@@ -208,6 +208,7 @@ namespace {
         else
             return xHandler->getSelectedItem();
     }
+#endif
 }
 
 class FileEmitContext : public pdfparse::EmitContext
@@ -218,18 +219,18 @@ private:
     uno::Reference< io::XStream >        m_xContextStream;
     uno::Reference< io::XSeekable >      m_xSeek;
     uno::Reference< io::XOutputStream >  m_xOut;
-    
+
 public:
     FileEmitContext( const rtl::OUString&                            rOrigFile,
                      const uno::Reference< uno::XComponentContext >& xContext,
                      const pdfparse::PDFContainer*                   pTop );
     virtual ~FileEmitContext();
-    
+
     virtual bool         write( const void* pBuf, unsigned int nLen );
     virtual unsigned int getCurPos();
     virtual bool         copyOrigBytes( unsigned int nOrigOffset, unsigned int nLen );
     virtual unsigned int readOrigBytes( unsigned int nOrigOffset, unsigned int nLen, void* pBuf );
-    
+
     const uno::Reference< io::XStream >& getContextStream() const { return m_xContextStream; }
 };
 
@@ -243,24 +244,24 @@ FileEmitContext::FileEmitContext( const rtl::OUString&                          
     m_xSeek(),
     m_xOut()
 {
-    m_xContextStream = uno::Reference< io::XStream >( 
-        xContext->getServiceManager()->createInstanceWithContext( 
+    m_xContextStream = uno::Reference< io::XStream >(
+        xContext->getServiceManager()->createInstanceWithContext(
             rtl::OUString( RTL_CONSTASCII_USTRINGPARAM( "com.sun.star.io.TempFile" ) ),
             xContext ), uno::UNO_QUERY_THROW );
     m_xOut = m_xContextStream->getOutputStream();
     m_xSeek = uno::Reference<io::XSeekable>(m_xOut, uno::UNO_QUERY_THROW );
-    
+
     oslFileError aErr = osl_File_E_None;
-    if( (aErr=osl_openFile( rOrigFile.pData, 
-                            &m_aReadHandle, 
+    if( (aErr=osl_openFile( rOrigFile.pData,
+                            &m_aReadHandle,
                             osl_File_OpenFlag_Read )) == osl_File_E_None )
     {
-        if( (aErr=osl_setFilePos( m_aReadHandle, 
-                                  osl_Pos_End, 
+        if( (aErr=osl_setFilePos( m_aReadHandle,
+                                  osl_Pos_End,
                                   0 )) == osl_File_E_None )
         {
             sal_uInt64 nFileSize = 0;
-            if( (aErr=osl_getFilePos( m_aReadHandle, 
+            if( (aErr=osl_getFilePos( m_aReadHandle,
                                       &nFileSize )) == osl_File_E_None )
             {
                 m_nReadLen = static_cast<unsigned int>(nFileSize);
@@ -285,7 +286,7 @@ bool FileEmitContext::write( const void* pBuf, unsigned int nLen )
 {
     if( ! m_xOut.is() )
         return false;
-    
+
     uno::Sequence< sal_Int8 > aSeq( nLen );
     rtl_copyMemory( aSeq.getArray(), pBuf, nLen );
     m_xOut->writeBytes( aSeq );
@@ -306,16 +307,16 @@ bool FileEmitContext::copyOrigBytes( unsigned int nOrigOffset, unsigned int nLen
 {
     if( nOrigOffset + nLen > m_nReadLen )
         return false;
-    
+
     if( osl_setFilePos( m_aReadHandle, osl_Pos_Absolut, nOrigOffset ) != osl_File_E_None )
         return false;
 
     uno::Sequence< sal_Int8 > aSeq( nLen );
 
     sal_uInt64 nBytesRead = 0;
-    if( osl_readFile( m_aReadHandle, 
-                      aSeq.getArray(), 
-                      nLen, 
+    if( osl_readFile( m_aReadHandle,
+                      aSeq.getArray(),
+                      nLen,
                       &nBytesRead ) != osl_File_E_None
         || nBytesRead != static_cast<sal_uInt64>(nLen) )
     {
@@ -330,18 +331,18 @@ unsigned int FileEmitContext::readOrigBytes( unsigned int nOrigOffset, unsigned 
 {
     if( nOrigOffset + nLen > m_nReadLen )
         return 0;
-    
-    if( osl_setFilePos( m_aReadHandle, 
-                        osl_Pos_Absolut, 
+
+    if( osl_setFilePos( m_aReadHandle,
+                        osl_Pos_Absolut,
                         nOrigOffset ) != osl_File_E_None )
     {
         return 0;
     }
 
     sal_uInt64 nBytesRead = 0;
-    if( osl_readFile( m_aReadHandle, 
-                      pBuf, 
-                      nLen, 
+    if( osl_readFile( m_aReadHandle,
+                      pBuf,
+                      nLen,
                       &nBytesRead ) != osl_File_E_None )
     {
         return 0;
@@ -363,7 +364,7 @@ rtl::OUString SAL_CALL PDFDetector::detect( uno::Sequence< beans::PropertyValue 
 {
     osl::MutexGuard const guard( m_aMutex );
     bool bSuccess = false;
-    
+
     // get the InputStream carrying the PDF content
     uno::Reference< io::XInputStream > xInput;
     uno::Reference< io::XStream > xEmbedStream;
@@ -421,7 +422,7 @@ rtl::OUString SAL_CALL PDFDetector::detect( uno::Sequence< beans::PropertyValue 
                 }
             }
         }
-        
+
         // check for hybrid PDF
         oslFileHandle aFile = NULL;
         if( bSuccess &&
@@ -436,7 +437,7 @@ rtl::OUString SAL_CALL PDFDetector::detect( uno::Sequence< beans::PropertyValue 
             else
             {
 #if OSL_DEBUG_LEVEL > 1
-                OSL_TRACE( "created temp file %s\n", 
+                OSL_TRACE( "created temp file %s\n",
                            rtl::OUStringToOString( aURL, RTL_TEXTENCODING_UTF8 ).getStr() );
 #endif
                 osl_writeFile( aFile, aBuf.getConstArray(), nBytes, &nWritten );
@@ -461,7 +462,7 @@ rtl::OUString SAL_CALL PDFDetector::detect( uno::Sequence< beans::PropertyValue 
                             }
                         }
                     } while( nBytes == nBufSize );
-                }                
+                }
             }
             osl_closeFile( aFile );
         }
@@ -492,7 +493,7 @@ rtl::OUString SAL_CALL PDFDetector::detect( uno::Sequence< beans::PropertyValue 
             {
                 nFilterNamePos = nAttribs;
                 rFilterData.realloc( ++nAttribs );
-                rFilterData[ nFilterNamePos ].Name = 
+                rFilterData[ nFilterNamePos ].Name =
                     rtl::OUString( RTL_CONSTASCII_USTRINGPARAM( "FilterName" ) );
             }
             aOutTypeName = rtl::OUString( RTL_CONSTASCII_USTRINGPARAM("pdf_Portable_Document_Format") );
@@ -575,13 +576,13 @@ bool checkDocChecksum( const rtl::OUString& rInPDFFileURL,
     const sal_Unicode* pChar = rChkSum.getStr();
     for( unsigned int i = 0; i < RTL_DIGEST_LENGTH_MD5; i++ )
     {
-        sal_uInt8 nByte = sal_uInt8( ( (*pChar >= '0' && *pChar <= '9') ? *pChar - '0' : 
+        sal_uInt8 nByte = sal_uInt8( ( (*pChar >= '0' && *pChar <= '9') ? *pChar - '0' :
                           ( (*pChar >= 'A' && *pChar <= 'F') ? *pChar - 'A' + 10 :
                           ( (*pChar >= 'a' && *pChar <= 'f') ? *pChar - 'a' + 10 :
                           0 ) ) ) );
         nByte <<= 4;
         pChar++;
-        nByte |= ( (*pChar >= '0' && *pChar <= '9') ? *pChar - '0' : 
+        nByte |= ( (*pChar >= '0' && *pChar <= '9') ? *pChar - '0' :
                  ( (*pChar >= 'A' && *pChar <= 'F') ? *pChar - 'A' + 10 :
                  ( (*pChar >= 'a' && *pChar <= 'f') ? *pChar - 'a' + 10 :
                  0 ) ) );
@@ -595,8 +596,8 @@ bool checkDocChecksum( const rtl::OUString& rInPDFFileURL,
     rtlDigest aActualDigest = rtl_digest_createMD5();
     oslFileHandle aRead = NULL;
     oslFileError aErr = osl_File_E_None;
-    if( (aErr = osl_openFile(rInPDFFileURL.pData, 
-                             &aRead, 
+    if( (aErr = osl_openFile(rInPDFFileURL.pData,
+                             &aRead,
                              osl_File_OpenFlag_Read )) == osl_File_E_None )
     {
         sal_Int8 aBuf[4096];
@@ -618,7 +619,7 @@ bool checkDocChecksum( const rtl::OUString& rInPDFFileURL,
         osl_closeFile( aRead );
     }
     rtl_digest_destroyMD5( aActualDigest );
-    
+
     // compare the contents
     bRet = (0 == rtl_compareMemory( nActualChecksum, nTestChecksum, sizeof( nActualChecksum ) ));
 #if OSL_DEBUG_LEVEL > 1
@@ -647,7 +648,7 @@ uno::Reference< io::XStream > getAdditionalStream( const rtl::OUString&         
     if( osl_getSystemPathFromFileURL( rInPDFFileURL.pData, &aSysUPath.pData ) != osl_File_E_None )
         return xEmbed;
     aPDFFile = rtl::OUStringToOString( aSysUPath, osl_getThreadTextEncoding() );
-    
+
     pdfparse::PDFReader aParser;
     boost::scoped_ptr<pdfparse::PDFEntry> pEntry( aParser.read( aPDFFile.getStr() ));
     if( pEntry )
@@ -677,7 +678,7 @@ uno::Reference< io::XStream > getAdditionalStream( const rtl::OUString&         
                         OSL_TRACE( "no name for DocChecksum entry\n" );
                         continue;
                     }
-                    
+
                     // search for AdditionalStreams entry
                     std::hash_map< rtl::OString,
                                    pdfparse::PDFEntry*,
@@ -694,7 +695,7 @@ uno::Reference< io::XStream > getAdditionalStream( const rtl::OUString&         
                         OSL_TRACE( "AdditionalStreams array too small\n" );
                         continue;
                     }
-                    
+
                     // check checksum
                     rtl::OUString aChkSum = pChkSumName->getFilteredName();
                     if( ! checkDocChecksum( rInPDFFileURL, pTrailer->m_nOffset, aChkSum ) )
@@ -718,7 +719,7 @@ uno::Reference< io::XStream > getAdditionalStream( const rtl::OUString&         
                                 bool bAuthenticated = false;
                                 if( io_rPwd.getLength() )
                                 {
-                                    rtl::OString aIsoPwd = rtl::OUStringToOString( io_rPwd, 
+                                    rtl::OString aIsoPwd = rtl::OUStringToOString( io_rPwd,
                                                                                    RTL_TEXTENCODING_ISO_8859_1 );
                                     bAuthenticated = pPDFFile->setupDecryptionData( aIsoPwd.getStr() );
                                 }
@@ -738,12 +739,12 @@ uno::Reference< io::XStream > getAdditionalStream( const rtl::OUString&         
                                         xEmbed.clear();
                                         break;
                                     }
-    
+
                                     bool bEntered = false;
                                     do
                                     {
                                         bEntered = getPassword( xIntHdl, io_rPwd, ! bEntered );
-                                        rtl::OString aIsoPwd = rtl::OUStringToOString( io_rPwd, 
+                                        rtl::OString aIsoPwd = rtl::OUStringToOString( io_rPwd,
                                                                                        RTL_TEXTENCODING_ISO_8859_1 );
                                         bAuthenticated = pPDFFile->setupDecryptionData( aIsoPwd.getStr() );
                                     } while( bEntered && ! bAuthenticated );
@@ -754,8 +755,8 @@ uno::Reference< io::XStream > getAdditionalStream( const rtl::OUString&         
                                     continue;
                             }
                             rOutMimetype = pMimeType->getFilteredName();
-                            FileEmitContext aContext( rInPDFFileURL, 
-                                                      xContext, 
+                            FileEmitContext aContext( rInPDFFileURL,
+                                                      xContext,
                                                       pPDFFile );
                             aContext.m_bDecrypt = pPDFFile->isEncrypted();
                             pObject->writeStream( aContext, pPDFFile );
@@ -769,7 +770,7 @@ uno::Reference< io::XStream > getAdditionalStream( const rtl::OUString&         
     }
 
     OSL_TRACE( "extracted add stream: mimetype %s\n",
-               rtl::OUStringToOString( rOutMimetype, 
+               rtl::OUStringToOString( rOutMimetype,
                                        RTL_TEXTENCODING_UTF8 ).getStr());
     return xEmbed;
 }
