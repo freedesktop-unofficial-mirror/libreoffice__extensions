@@ -1,7 +1,7 @@
 /*************************************************************************
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
- * 
+ *
  * Copyright 2008 by Sun Microsystems, Inc.
  *
  * OpenOffice.org - a multi-platform office productivity suite
@@ -32,7 +32,7 @@
 #ifndef SDEXT_PRESENTER_COMPONENT_HXX
 #define SDEXT_PRESENTER_COMPONENT_HXX
 
-#include <comphelper/componentmodule.hxx>
+#include <com/sun/star/uno/XComponentContext.hpp>
 
 namespace css = ::com::sun::star;
 

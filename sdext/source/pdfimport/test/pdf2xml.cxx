@@ -1,7 +1,7 @@
 /*************************************************************************
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
- * 
+ *
  * Copyright 2008 by Sun Microsystems, Inc.
  *
  * OpenOffice.org - a multi-platform office productivity suite
@@ -37,7 +37,7 @@
 #include "pdfihelper.hxx"
 #include "wrapper.hxx"
 #include "pdfparse.hxx"
-#include "../pdfiadaptor.hxx" 
+#include "../pdfiadaptor.hxx"
 
 #include <sal/main.h>
 #include <osl/process.h>
@@ -56,7 +56,7 @@ SAL_IMPLEMENT_MAIN_WITH_ARGS(argc, argv)
         return 1;
 
     ::rtl::OUString aBaseURL, aTmpURL, aSrcURL, aDstURL, aIniUrl;
-    
+
     TreeVisitorFactorySharedPtr pTreeFactory;
     if( rtl_str_compare(argv[1], "-writer") == 0 )
         pTreeFactory = createWriterTreeVisitorFactory();
@@ -66,7 +66,7 @@ SAL_IMPLEMENT_MAIN_WITH_ARGS(argc, argv)
         pTreeFactory = createImpressTreeVisitorFactory();
     else
         return 1;
-        
+
     osl_getProcessWorkingDir(&aBaseURL.pData);
     osl_getFileURLFromSystemPath( rtl::OUString::createFromAscii(argv[2]).pData,
                                   &aTmpURL.pData );
@@ -76,7 +76,7 @@ SAL_IMPLEMENT_MAIN_WITH_ARGS(argc, argv)
                                   &aTmpURL.pData );
     osl_getAbsoluteFileURL(aBaseURL.pData,aTmpURL.pData,&aDstURL.pData);
 
-    osl_getFileURLFromSystemPath( rtl::OUString::createFromAscii(argv[4]).pData, 
+    osl_getFileURLFromSystemPath( rtl::OUString::createFromAscii(argv[4]).pData,
                                 &aTmpURL.pData );
     osl_getAbsoluteFileURL(aBaseURL.pData,aTmpURL.pData,&aIniUrl.pData);
 
@@ -86,7 +86,7 @@ SAL_IMPLEMENT_MAIN_WITH_ARGS(argc, argv)
     try
     {
         xCtx = ::cppu::defaultBootstrap_InitialComponentContext(aIniUrl);
-        xFactory = uno::Reference< lang::XMultiServiceFactory >(  xCtx->getServiceManager(), 
+        xFactory = uno::Reference< lang::XMultiServiceFactory >(  xCtx->getServiceManager(),
                                                                   uno::UNO_QUERY );
         if( xFactory.is() )
             ::comphelper::setProcessServiceFactory( xFactory );
