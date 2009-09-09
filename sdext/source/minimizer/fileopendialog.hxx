@@ -1,7 +1,7 @@
 /*************************************************************************
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
- * 
+ *
  * Copyright 2008 by Sun Microsystems, Inc.
  *
  * OpenOffice.org - a multi-platform office productivity suite
@@ -33,10 +33,10 @@
 #define _FILEOPEN_DIALOG_HXX_
 
 #include <vector>
-#include <comphelper/processfactory.hxx>
 #include <com/sun/star/beans/StringPair.hpp>
 #include <com/sun/star/container/XNameAccess.hpp>
 #include <com/sun/star/ui/dialogs/XFilePicker.hpp>
+#include <com/sun/star/uno/XComponentContext.hpp>
 
 class FileOpenDialog
 {
@@ -72,4 +72,4 @@ public :
 };
 
 #endif	// _FILEOPEN_DIALOG_HXX_
-    
+
