@@ -91,7 +91,7 @@ CONFIGURE_ACTION=./configure --without-x --enable-multithreaded --enable-excepti
 BUILD_ACTION=$(GNUMAKE) -j$(EXTMAXPROCESS)
 .ELSE
 CONFIGURE_ACTION=
-BUILD_ACTION= cmd.exe /c ms_make.bat
+BUILD_ACTION= cmd.exe /d /c ms_make.bat
 .ENDIF
 .ENDIF
 
@@ -99,28 +99,28 @@ CONVERTFILES=ms_make.bat
 BUILD_FLAGS=
 
 OUT2INC= \
-    fofi$/*.h \
-    goo$/*.h  \
-    xpdf$/*.h \
-    aconf.h   \
-    aconf2.h
+	fofi$/*.h \
+	goo$/*.h  \
+	xpdf$/*.h \
+	aconf.h   \
+	aconf2.h
 
 .IF "$(GUI)"=="UNX"
 OUT2LIB= \
-    fofi$/lib*.a \
-    goo$/lib*.a \
-    xpdf$/lib*.a
+	fofi$/lib*.a \
+	goo$/lib*.a \
+	xpdf$/lib*.a
 .ELSE
 .IF "$(COM)"=="GCC"
 OUT2LIB= \
-    fofi$/lib*.a \
-    goo$/lib*.a \
-    xpdf$/lib*.a
+	fofi$/lib*.a \
+	goo$/lib*.a \
+	xpdf$/lib*.a
 .ELSE
 OUT2LIB= \
-    fofi$/*.lib \
-    goo$/*.lib \
-    xpdf$/*.lib
+	fofi$/*.lib \
+	goo$/*.lib \
+	xpdf$/*.lib
 .ENDIF
 .ENDIF
 
