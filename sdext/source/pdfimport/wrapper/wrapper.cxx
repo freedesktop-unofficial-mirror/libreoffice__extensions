@@ -1,7 +1,7 @@
 /*************************************************************************
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
- * 
+ *
  * Copyright 2008 by Sun Microsystems, Inc.
  *
  * OpenOffice.org - a multi-platform office productivity suite
@@ -144,7 +144,7 @@ enum parseKey {
 
 class Parser
 {
-    typedef std::hash_map< sal_Int64, 
+    typedef std::hash_map< sal_Int64,
                            FontAttributes > FontMapType;
 
     const uno::Reference<uno::XComponentContext> m_xContext;
@@ -160,7 +160,6 @@ class Parser
     void           readInt32( sal_Int32& o_Value );
     sal_Int32      readInt32();
     void           readInt64( sal_Int64& o_Value );
-    sal_Int64      readInt64();
     void           readDouble( double& o_Value );
     double         readDouble();
     void           readBinaryData( uno::Sequence<sal_Int8>& rBuf );
@@ -220,11 +219,6 @@ void Parser::readInt64( sal_Int64& o_Value )
     o_Value = readNextToken().toInt64();
 }
 
-sal_Int64 Parser::readInt64()
-{
-    return readNextToken().toInt64();
-}
-
 void Parser::readDouble( double& o_Value )
 {
     o_Value = readNextToken().toDouble();
@@ -240,14 +234,14 @@ void Parser::readBinaryData( uno::Sequence<sal_Int8>& rBuf )
     sal_Int32 nFileLen( rBuf.getLength() );
     sal_Int8*           pBuf( rBuf.getArray() );
     sal_uInt64          nBytesRead(0);
-    oslFileError        nRes=osl_File_E_None;    
+    oslFileError        nRes=osl_File_E_None;
     while( nFileLen &&
            osl_File_E_None == (nRes=osl_readFile( m_pErr, pBuf, nFileLen, &nBytesRead )) )
     {
         pBuf += nBytesRead;
         nFileLen -= sal::static_int_cast<sal_Int32>(nBytesRead);
     }
-    
+
     OSL_PRECOND(nRes==osl_File_E_None, "inconsistent data");
 }
 
@@ -286,7 +280,7 @@ uno::Reference<rendering::XPolyPolygon2D> Parser::readPath()
             }
             else if( nContiguousControlPoints )
             {
-                OSL_PRECOND(nContiguousControlPoints==2,"broken bezier path"); 
+                OSL_PRECOND(nContiguousControlPoints==2,"broken bezier path");
 
                 // have two control points before us. the current one
                 // is a normal point - thus, convert previous points
@@ -310,7 +304,7 @@ uno::Reference<rendering::XPolyPolygon2D> Parser::readPath()
         if( m_nCharIndex != -1 )
             readNextToken();
     }
-    
+
     return static_cast<rendering::XLinePolyPolygon2D*>(
         new basegfx::unotools::UnoPolyPolygon(aResult));
 }
@@ -411,7 +405,7 @@ rendering::ARGBColor Parser::readColor()
 void Parser::parseFontFamilyName( FontAttributes& aResult )
 {
     rtl::OUStringBuffer aNewFamilyName( aResult.familyName.getLength() );
-    
+
     const sal_Unicode* pCopy = aResult.familyName.getStr();
     sal_Int32 nLen = aResult.familyName.getLength();
     // parse out truetype subsets (e.g. BAAAAA+Thorndale)
@@ -420,7 +414,7 @@ void Parser::parseFontFamilyName( FontAttributes& aResult )
         pCopy += 7;
         nLen -= 7;
     }
-    
+
     while( nLen )
     {
         if( nLen > 5 &&
@@ -515,7 +509,7 @@ void Parser::readFont()
     if( nFileLen )
     {
         uno::Sequence<sal_Int8> aFontFile(nFileLen);
-        readBinaryData( aFontFile ); 
+        readBinaryData( aFontFile );
 
         awt::FontDescriptor aFD;
         uno::Sequence< uno::Any > aArgs(1);
@@ -523,11 +517,11 @@ void Parser::readFont()
 
         try
         {
-            uno::Reference< beans::XMaterialHolder > xMat( 
+            uno::Reference< beans::XMaterialHolder > xMat(
                 m_xContext->getServiceManager()->createInstanceWithArgumentsAndContext(
                     rtl::OUString( RTL_CONSTASCII_USTRINGPARAM( "com.sun.star.awt.FontIdentificator" ) ),
                     aArgs,
-                    m_xContext ), 
+                    m_xContext ),
                 uno::UNO_QUERY );
             if( xMat.is() )
             {
@@ -567,11 +561,11 @@ uno::Sequence<beans::PropertyValue> Parser::readImageImpl()
     static const rtl::OString aJpegMarker( "JPEG" );
     static const rtl::OString aPbmMarker(  "PBM" );
     static const rtl::OString aPpmMarker(  "PPM" );
-    static const rtl::OUString aJpegFile(  
+    static const rtl::OUString aJpegFile(
         RTL_CONSTASCII_USTRINGPARAM( "DUMMY.JPEG" ));
-    static const rtl::OUString aPbmFile(   
+    static const rtl::OUString aPbmFile(
         RTL_CONSTASCII_USTRINGPARAM( "DUMMY.PBM" ));
-    static const rtl::OUString aPpmFile(   
+    static const rtl::OUString aPpmFile(
         RTL_CONSTASCII_USTRINGPARAM( "DUMMY.PPM" ));
 
     rtl::OString aToken = readNextToken();
@@ -590,7 +584,7 @@ uno::Sequence<beans::PropertyValue> Parser::readImageImpl()
     }
 
     uno::Sequence<sal_Int8> aDataSequence(nImageSize);
-    readBinaryData( aDataSequence ); 
+    readBinaryData( aDataSequence );
 
     uno::Sequence< uno::Any > aStreamCreationArgs(1);
     aStreamCreationArgs[0] <<= aDataSequence;
@@ -624,13 +618,13 @@ void Parser::readImage()
     readInt32(nWidth);
     readInt32(nHeight);
     readInt32(nMaskColors);
-    
+
     uno::Sequence<beans::PropertyValue> aImg( readImageImpl() );
 
     if( nMaskColors )
     {
         uno::Sequence<sal_Int8> aDataSequence(nMaskColors);
-        readBinaryData( aDataSequence ); 
+        readBinaryData( aDataSequence );
 
         uno::Sequence<uno::Any> aMaskRanges(2);
 
@@ -641,7 +635,7 @@ void Parser::readImage()
             aMinRange[i] = aDataSequence[i] / 255.0;
             aMaxRange[i] = aDataSequence[i+nMaskColors/2] / 255.0;
         }
-        
+
         aMaskRanges[0] = uno::makeAny(aMinRange);
         aMaskRanges[1] = uno::makeAny(aMaxRange);
 
@@ -657,7 +651,7 @@ void Parser::readMask()
     readInt32(nWidth);
     readInt32(nHeight);
     readInt32(nInvert);
-    
+
     m_pSink->drawMask( readImageImpl(), nInvert );
 }
 
@@ -669,7 +663,7 @@ void Parser::readLink()
     readDouble(aBounds.X2);
     readDouble(aBounds.Y2);
 
-    m_pSink->hyperLink( aBounds, 
+    m_pSink->hyperLink( aBounds,
                         rtl::OStringToOUString( m_aLine.copy(m_nCharIndex),
                                                 RTL_TEXTENCODING_UTF8 ));
     // name gobbles up rest of line

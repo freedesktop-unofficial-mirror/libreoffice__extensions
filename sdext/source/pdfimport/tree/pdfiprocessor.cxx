@@ -1,7 +1,7 @@
 /*************************************************************************
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
- * 
+ *
  * Copyright 2008 by Sun Microsystems, Inc.
  *
  * OpenOffice.org - a multi-platform office productivity suite
@@ -96,7 +96,7 @@ namespace pdfi
     aDefFont.size       = 10*PDFI_OUTDEV_RESOLUTION/72;
     m_aIdToFont[ 0 ]    = aDefFont;
     m_aFontToId[ aDefFont ] = 0;
-    
+
     GraphicsContext aDefGC;
     m_aGCStack.push_back( aDefGC );
     m_aIdToGC[ 0 ] = aDefGC;
@@ -108,9 +108,9 @@ void PDFIProcessor::enableToplevelText()
     m_bHaveTextOnDocLevel = true;
 }
 
-void PDFIProcessor::setPageNum( sal_Int32 nPages ) 
-{ 
-    m_nPages = nPages; 
+void PDFIProcessor::setPageNum( sal_Int32 nPages )
+{
+    m_nPages = nPages;
 }
 
 
@@ -131,7 +131,7 @@ void PDFIProcessor::setFlatness( double value )
 
 void PDFIProcessor::setTransformation( const geometry::AffineMatrix2D& rMatrix )
 {
-    basegfx::unotools::homMatrixFromAffineMatrix( 
+    basegfx::unotools::homMatrixFromAffineMatrix(
         getCurrentContext().Transformation,
         rMatrix );
 }
@@ -213,13 +213,9 @@ sal_Int32 PDFIProcessor::getFontId( const FontAttributes& rAttr ) const
     const sal_Int32 nFont = getCurrentContext().FontId;
     const_cast<PDFIProcessor*>(this)->getCurrentContext().FontId = nCurFont;
 
-    return nFont; 
+    return nFont;
 }
-void PDFIProcessor::setWordSpace( double fWordSpace)
-{
-    m_fWordSpace=fWordSpace;
-}
- 
+
 // line diagnose block - start
 void PDFIProcessor::processGlyphLine()
 {
@@ -236,7 +232,7 @@ void PDFIProcessor::processGlyphLine()
     unsigned int    nDiffSpaceCount( 0 );
     unsigned int    nNullSpaceBreakerCount=0;
     bool preSpaceNull(true);
-    
+
     for ( unsigned int i=0; i<m_GlyphsList.size()-1; i++ ) // i=1 because the first glyph doesn't have a prevGlyphSpace value
     {
         if( m_GlyphsList[i].getPrevGlyphsSpace()>0.0 )
@@ -253,13 +249,13 @@ void PDFIProcessor::processGlyphLine()
     }
 
     if( nSpaceCount!=0 )
-     fPreAvarageSpaceValue= fPreAvarageSpaceValue/( nSpaceCount ); 
-    
+     fPreAvarageSpaceValue= fPreAvarageSpaceValue/( nSpaceCount );
+
     for ( unsigned int i=0; i<m_GlyphsList.size()-1; i++ ) // i=1 because the first glyph doesn't have a prevGlyphSpace value
     {
        if ( m_GlyphsList[i].getPrevGlyphsSpace()==0.0 )
        {
-            if ( 
+            if (
                  ( m_GlyphsList[i+1].getPrevGlyphsSpace()>0.0)&&
                  ( fPreAvarageSpaceValue>m_GlyphsList[i+1].getPrevGlyphsSpace())
                )
@@ -282,7 +278,7 @@ void PDFIProcessor::processGlyphLine()
         if  ( ( m_GlyphsList[i].getPrevGlyphsSpace()>0.0 )
             )
         {
-          if (  
+          if (
               ( m_GlyphsList[i].getPrevGlyphsSpace()  <= fPreAvarageSpaceValue )&&
               ( m_GlyphsList[i+1].getPrevGlyphsSpace()<= fPreAvarageSpaceValue )
              )
@@ -299,23 +295,23 @@ void PDFIProcessor::processGlyphLine()
                }
           }
         }
-       
+
     }
 
-    if ( 
+    if (
          ( nNullSpaceBreakerCount>0 )
        )
     {
        fNullSpaceBreakerAvaregeSpaceValue=fNullSpaceBreakerAvaregeSpaceValue/nNullSpaceBreakerCount;
     }
 
-    if ( 
+    if (
          ( nDiffSpaceCount>0 )&&(fAvarageDiffCharSpaceValue>0)
        )
     {
         fAvarageDiffCharSpaceValue= fAvarageDiffCharSpaceValue/ nDiffSpaceCount;
     }
-  
+
     ParagraphElement* pPara= NULL ;
     FrameElement* pFrame= NULL ;
 
@@ -324,7 +320,7 @@ void PDFIProcessor::processGlyphLine()
         pFrame = m_pElFactory->createFrameElement( m_GlyphsList[0].getCurElement(), getGCId( getTransformGlyphContext( m_GlyphsList[0])) );
         pFrame->ZOrder = m_nNextZOrder++;
         pPara = m_pElFactory->createParagraphElement( pFrame );
-    
+
 
 
         processGlyph( 0,
@@ -332,13 +328,13 @@ void PDFIProcessor::processGlyphLine()
                   pPara,
                   pFrame,
                   m_bIsWhiteSpaceInLine );
-         
+
 
     }
-    
-    
+
+
     preSpaceNull=false;
-             
+
     for ( unsigned int i=1; i<m_GlyphsList.size()-1; i++ )
     {
         double fPrevDiffCharSpace= m_GlyphsList[i].getPrevGlyphsSpace()-m_GlyphsList[i-1].getPrevGlyphsSpace();
@@ -350,15 +346,14 @@ void PDFIProcessor::processGlyphLine()
             )
          {
                preSpaceNull=false;
-              if( fNullSpaceBreakerAvaregeSpaceValue > m_GlyphsList[i].getPrevGlyphsSpace() ) 
-                 
+              if( fNullSpaceBreakerAvaregeSpaceValue > m_GlyphsList[i].getPrevGlyphsSpace() )
               {
                 processGlyph( 0,
                                       m_GlyphsList[i],
                               pPara,
                               pFrame,
                               m_bIsWhiteSpaceInLine );
-             
+
               }
               else
               {
@@ -367,7 +362,7 @@ void PDFIProcessor::processGlyphLine()
                               pPara,
                               pFrame,
                               m_bIsWhiteSpaceInLine );
-                 
+
               }
 
          }
@@ -378,16 +373,16 @@ void PDFIProcessor::processGlyphLine()
                 ( fPrevDiffCharSpace<=fAvarageDiffCharSpaceValue )&&
                 ( fPostDiffCharSpace<=fAvarageDiffCharSpaceValue ) ||
                 ( m_GlyphsList[i].getPrevGlyphsSpace() == 0.0 )
-            ) 
+            )
             {
                 preSpaceNull=true;
-   
+
             processGlyph( 0,
                         m_GlyphsList[i],
                         pPara,
                         pFrame,
                         m_bIsWhiteSpaceInLine );
-             
+
             }
             else
             {
@@ -396,11 +391,11 @@ void PDFIProcessor::processGlyphLine()
                         pPara,
                         pFrame,
                         m_bIsWhiteSpaceInLine );
-                  
+
             }
 
          }
-        
+
     }
 
     if(m_GlyphsList.size()>1)
@@ -408,11 +403,11 @@ void PDFIProcessor::processGlyphLine()
                   m_GlyphsList[m_GlyphsList.size()-1],
                   pPara,
                   pFrame,
-                  m_bIsWhiteSpaceInLine ); 
-    
+                  m_bIsWhiteSpaceInLine );
+
     m_GlyphsList.clear();
 }
- 
+
 void PDFIProcessor::processGlyph( double       fPreAvarageSpaceValue,
                                   CharGlyph&   aGlyph,
                                   ParagraphElement* pPara,
@@ -451,18 +446,18 @@ void PDFIProcessor::drawGlyphLine( const rtl::OUString&             rGlyphs,
                                    const geometry::Matrix2D&        rFontMatrix )
 {
     double isFirstLine= fYPrevTextPosition+ fXPrevTextPosition+ fPrevTextHeight+ fPrevTextWidth ;
-  
+
     if(
         (  ( ( fYPrevTextPosition!= rRect.Y1 ) ) ||
            ( ( fXPrevTextPosition > rRect.X2 ) ) ||
-           ( ( fXPrevTextPosition+fPrevTextWidth*1.3)<rRect.X1 ) 
-        )  && ( isFirstLine> 0.0 ) 
-    )  
+           ( ( fXPrevTextPosition+fPrevTextWidth*1.3)<rRect.X1 )
+        )  && ( isFirstLine> 0.0 )
+    )
     {
         processGlyphLine();
-     
+
     }
-       
+
        CharGlyph aGlyph;
 
        aGlyph.setGlyph ( rGlyphs );
@@ -471,7 +466,7 @@ void PDFIProcessor::drawGlyphLine( const rtl::OUString&             rGlyphs,
        aGlyph.setGraphicsContext ( getCurrentContext() );
        getGCId(getCurrentContext());
        aGlyph.setCurElement( m_pCurElement );
-        
+
        aGlyph.setYPrevGlyphPosition( fYPrevTextPosition );
        aGlyph.setXPrevGlyphPosition( fXPrevTextPosition );
        aGlyph.setPrevGlyphHeight  ( fPrevTextHeight );
@@ -489,22 +484,22 @@ void PDFIProcessor::drawGlyphLine( const rtl::OUString&             rGlyphs,
          rtl::OUString tempWhiteSpaceStr( 32 );
          m_bIsWhiteSpaceInLine=rGlyphs.equals( tempWhiteSpaceStr );
        }
- 
+
 }
- 
+
 GraphicsContext& PDFIProcessor::getTransformGlyphContext( CharGlyph& rGlyph )
 {
     geometry::RealRectangle2D   rRect = rGlyph.getRect();
     geometry::Matrix2D          rFontMatrix = rGlyph.getFontMatrix();
-  
+
     rtl::OUString tempStr( 32 );
-    geometry::RealRectangle2D aRect(rRect);   
-            
+    geometry::RealRectangle2D aRect(rRect);
+
     basegfx::B2DHomMatrix aFontMatrix;
-    basegfx::unotools::homMatrixFromMatrix( 
+    basegfx::unotools::homMatrixFromMatrix(
         aFontMatrix,
         rFontMatrix );
-    
+
     FontAttributes aFontAttrs = m_aIdToFont[ rGlyph.getGC().FontId ];
 
     // add transformation to GC
@@ -513,7 +508,7 @@ GraphicsContext& PDFIProcessor::getTransformGlyphContext( CharGlyph& rGlyph )
     aFontTransform *= aFontMatrix;
     aFontTransform.translate( rRect.X1, rRect.Y1 );
 
-    
+
     rGlyph.getGC().Transformation = rGlyph.getGC().Transformation * aFontTransform;
     getGCId(rGlyph.getGC());
 
@@ -528,35 +523,35 @@ void PDFIProcessor::drawCharGlyphs( rtl::OUString&             rGlyphs,
                                     FrameElement* pFrame,
                                     bool bSpaceFlag )
 {
-   
+
 
     rtl::OUString tempStr( 32 );
-    geometry::RealRectangle2D aRect(rRect);   
+    geometry::RealRectangle2D aRect(rRect);
 
     ::basegfx::B2DRange aRect2;
-    calcTransformedRectBounds( aRect2, 
+    calcTransformedRectBounds( aRect2,
                                               ::basegfx::unotools::b2DRectangleFromRealRectangle2D(aRect),
                                               aGC.Transformation );
    // check whether there was a previous draw frame
- 
-    TextElement* pText = m_pElFactory->createTextElement( pPara, 
+
+    TextElement* pText = m_pElFactory->createTextElement( pPara,
                                                           getGCId(aGC),
                                                           aGC.FontId );
     if( bSpaceFlag )
         pText->Text.append( tempStr );
-    
+
     pText->Text.append( rGlyphs );
-                
+
     pText->x = aRect2.getMinX() ;
     pText->y = aRect2.getMinY() ;
     pText->w = 0.0;  // ToDO P2: 1.1 is a hack for solving of size auto-grow problem
     pText->h = aRect2.getHeight(); // ToDO P2: 1.1 is a hack for solving of size auto-grow problem
-    
+
     pPara->updateGeometryWith( pText );
-                
+
     if( pFrame )
       pFrame->updateGeometryWith( pPara );
-     
+
 }
 void PDFIProcessor::drawGlyphs( const rtl::OUString&             rGlyphs,
                                 const geometry::RealRectangle2D& rRect,
@@ -585,7 +580,7 @@ void PDFIProcessor::setupImage(ImageId nImage)
 
     // TODO(F3): Handle clip
     const sal_Int32 nGCId = getGCId(rGC);
-    FrameElement* pFrame = m_pElFactory->createFrameElement( m_pCurElement, nGCId );    
+    FrameElement* pFrame = m_pElFactory->createFrameElement( m_pCurElement, nGCId );
     ImageElement* pImageElement = m_pElFactory->createImageElement( pFrame, nGCId, nImage );
     pFrame->x = pImageElement->x = aOrigin.getX();
     pFrame->y = pImageElement->y = aOrigin.getY();
@@ -625,9 +620,9 @@ void PDFIProcessor::drawAlphaMaskedImage(const uno::Sequence<beans::PropertyValu
                                          const uno::Sequence<beans::PropertyValue>& /*xMask*/)
 {
     // TODO(F3): Handle mask
-     
+
     setupImage( m_aImages.addImage(xBitmap) );
-     
+
 }
 
 void PDFIProcessor::strokePath( const uno::Reference< rendering::XPolyPolygon2D >& rPath )
@@ -635,8 +630,8 @@ void PDFIProcessor::strokePath( const uno::Reference< rendering::XPolyPolygon2D 
     basegfx::B2DPolyPolygon aPoly=basegfx::unotools::b2DPolyPolygonFromXPolyPolygon2D(rPath);
     aPoly.transform(getCurrentContext().Transformation);
 
-    PolyPolyElement* pPoly = m_pElFactory->createPolyPolyElement( 
-        m_pCurElement, 
+    PolyPolyElement* pPoly = m_pElFactory->createPolyPolyElement(
+        m_pCurElement,
         getGCId(getCurrentContext()),
         aPoly,
         PATH_STROKE );
@@ -649,8 +644,8 @@ void PDFIProcessor::fillPath( const uno::Reference< rendering::XPolyPolygon2D >&
     basegfx::B2DPolyPolygon aPoly=basegfx::unotools::b2DPolyPolygonFromXPolyPolygon2D(rPath);
     aPoly.transform(getCurrentContext().Transformation);
 
-    PolyPolyElement* pPoly = m_pElFactory->createPolyPolyElement( 
-        m_pCurElement, 
+    PolyPolyElement* pPoly = m_pElFactory->createPolyPolyElement(
+        m_pCurElement,
         getGCId(getCurrentContext()),
         aPoly,
         PATH_FILL );
@@ -663,8 +658,8 @@ void PDFIProcessor::eoFillPath( const uno::Reference< rendering::XPolyPolygon2D 
     basegfx::B2DPolyPolygon aPoly=basegfx::unotools::b2DPolyPolygonFromXPolyPolygon2D(rPath);
     aPoly.transform(getCurrentContext().Transformation);
 
-    PolyPolyElement* pPoly = m_pElFactory->createPolyPolyElement( 
-        m_pCurElement, 
+    PolyPolyElement* pPoly = m_pElFactory->createPolyPolyElement(
+        m_pCurElement,
         getGCId(getCurrentContext()),
         aPoly,
         PATH_EOFILL );
@@ -678,10 +673,10 @@ void PDFIProcessor::intersectClip(const uno::Reference< rendering::XPolyPolygon2
     basegfx::B2DPolyPolygon aNewClip = basegfx::unotools::b2DPolyPolygonFromXPolyPolygon2D(rPath);
     aNewClip.transform(getCurrentContext().Transformation);
     basegfx::B2DPolyPolygon aCurClip = getCurrentContext().Clip;
-    
+
     if( aCurClip.count() )  // #i92985# adapted API from (..., false, false) to (..., true, false)
         aNewClip = basegfx::tools::clipPolyPolygonOnPolyPolygon( aCurClip, aNewClip, true, false );
-    
+
     getCurrentContext().Clip = aNewClip;
 }
 
@@ -691,10 +686,10 @@ void PDFIProcessor::intersectEoClip(const uno::Reference< rendering::XPolyPolygo
     basegfx::B2DPolyPolygon aNewClip = basegfx::unotools::b2DPolyPolygonFromXPolyPolygon2D(rPath);
     aNewClip.transform(getCurrentContext().Transformation);
     basegfx::B2DPolyPolygon aCurClip = getCurrentContext().Clip;
-    
+
     if( aCurClip.count() )  // #i92985# adapted API from (..., false, false) to (..., true, false)
         aNewClip = basegfx::tools::clipPolyPolygonOnPolyPolygon( aCurClip, aNewClip, true, false );
-    
+
     getCurrentContext().Clip = aNewClip;
 }
 
@@ -703,8 +698,8 @@ void PDFIProcessor::hyperLink( const geometry::RealRectangle2D& rBounds,
 {
     if( rURI.getLength() )
     {
-        HyperlinkElement* pLink = m_pElFactory->createHyperlinkElement( 
-            &m_pCurPage->Hyperlinks, 
+        HyperlinkElement* pLink = m_pElFactory->createHyperlinkElement(
+            &m_pCurPage->Hyperlinks,
             rURI );
         pLink->x = rBounds.X1;
         pLink->y = rBounds.Y1;
