@@ -84,7 +84,7 @@ PresenterConfigurationAccess::PresenterConfigurationAccess (
                 sAccessService = A2S("com.sun.star.configuration.ConfigurationAccess");
             else
                 sAccessService = A2S("com.sun.star.configuration.ConfigurationUpdateAccess");
-            
+
             Reference<lang::XMultiServiceFactory> xProvider (
                 xFactory->createInstanceWithContext(
                     A2S("com.sun.star.configuration.ConfigurationProvider"),
