@@ -1,7 +1,7 @@
 /*************************************************************************
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
- * 
+ *
  * Copyright 2008 by Sun Microsystems, Inc.
  *
  * OpenOffice.org - a multi-platform office productivity suite
@@ -60,7 +60,7 @@
 
 namespace pdfi
 {
-    
+
     class  PDFIProcessor;
     struct Element;
     struct DocumentElement;
@@ -68,7 +68,7 @@ namespace pdfi
     class  ElementFactory;
     class  XmlEmitter;
     class  CharGlyph;
-    
+
     /** Main entry from the parser
 
         Creates the internal DOM tree from the render calls
@@ -78,10 +78,10 @@ namespace pdfi
     public:
         double fYPrevTextPosition;
         double fPrevTextHeight;
-        double fXPrevTextPosition; 
+        double fXPrevTextPosition;
         double fPrevTextWidth;
         enum DocumentTextDirecion { LrTb, RlTb, TbLr };
-        
+
         explicit PDFIProcessor( const com::sun::star::uno::Reference< com::sun::star::task::XStatusIndicator >& );
 
         /// TEMP - enable writer-like text:p on doc level
@@ -97,7 +97,7 @@ namespace pdfi
 
         ImageContainer& getImages() { return m_aImages; }
         boost::shared_ptr<ElementFactory> getElementFactory() const { return m_pElFactory; }
-        
+
         const com::sun::star::uno::Reference< com::sun::star::task::XStatusIndicator >& getStatusIndicator() const
         { return m_xStatusIndicator; }
         void setStatusIndicator( const com::sun::star::uno::Reference< com::sun::star::task::XStatusIndicator >& xStatus )
@@ -108,8 +108,7 @@ namespace pdfi
 
         void sortElements( Element* pElement, bool bDeep = false );
         void sortDocument( bool bDeep = false );
-        void setWordSpace( double fWordSpace);
-        
+
     private:
         void processGlyphLine();
         void processGlyph(   double       fPreAvarageSpaceValue,
@@ -138,9 +137,9 @@ namespace pdfi
         virtual void setPageNum( sal_Int32 nNumPages );
         virtual void startPage( const ::com::sun::star::geometry::RealSize2D& rSize );
         virtual void endPage();
-        
+
         virtual void hyperLink( const ::com::sun::star::geometry::RealRectangle2D& rBounds,
-                                const ::rtl::OUString&                             rURI );        
+                                const ::rtl::OUString&                             rURI );
         virtual void pushState();
         virtual void popState();
         virtual void setFlatness( double );
@@ -157,18 +156,18 @@ namespace pdfi
         virtual void setFont( const FontAttributes& rFont );
         virtual void setTextRenderMode( sal_Int32 );
 
-        virtual void strokePath( const ::com::sun::star::uno::Reference< 
+        virtual void strokePath( const ::com::sun::star::uno::Reference<
                                        ::com::sun::star::rendering::XPolyPolygon2D >& rPath );
-        virtual void fillPath( const ::com::sun::star::uno::Reference< 
+        virtual void fillPath( const ::com::sun::star::uno::Reference<
                                      ::com::sun::star::rendering::XPolyPolygon2D >& rPath );
-        virtual void eoFillPath( const ::com::sun::star::uno::Reference< 
+        virtual void eoFillPath( const ::com::sun::star::uno::Reference<
                                        ::com::sun::star::rendering::XPolyPolygon2D >& rPath );
-        
-        virtual void intersectClip(const ::com::sun::star::uno::Reference< 
+
+        virtual void intersectClip(const ::com::sun::star::uno::Reference<
                                          ::com::sun::star::rendering::XPolyPolygon2D >& rPath);
-        virtual void intersectEoClip(const ::com::sun::star::uno::Reference< 
+        virtual void intersectEoClip(const ::com::sun::star::uno::Reference<
                                            ::com::sun::star::rendering::XPolyPolygon2D >& rPath);
-        
+
         virtual void drawGlyphs( const rtl::OUString&                               rGlyphs,
                                  const ::com::sun::star::geometry::RealRectangle2D& rRect,
                                  const ::com::sun::star::geometry::Matrix2D&        rFontMatrix );
@@ -180,13 +179,13 @@ namespace pdfi
         /// Given image must already be color-mapped and normalized to sRGB.
         virtual void drawImage(const ::com::sun::star::uno::Sequence<
                                      ::com::sun::star::beans::PropertyValue>& xBitmap );
-        /** Given image must already be color-mapped and normalized to sRGB. 
+        /** Given image must already be color-mapped and normalized to sRGB.
 
             maskColors must contain two sequences of color components
          */
         virtual void drawColorMaskedImage(const ::com::sun::star::uno::Sequence<
                                                 ::com::sun::star::beans::PropertyValue>& xBitmap,
-                                          const ::com::sun::star::uno::Sequence< 
+                                          const ::com::sun::star::uno::Sequence<
                                                 ::com::sun::star::uno::Any>&             xMaskColors );
         virtual void drawMaskedImage(const ::com::sun::star::uno::Sequence<
                                            ::com::sun::star::beans::PropertyValue>& xBitmap,
