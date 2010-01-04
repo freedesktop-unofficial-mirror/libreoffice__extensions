@@ -1,7 +1,7 @@
 /*************************************************************************
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
- * 
+ *
  * Copyright 2008 by Sun Microsystems, Inc.
  *
  * OpenOffice.org - a multi-platform office productivity suite
@@ -42,7 +42,6 @@
 #include <cppuhelper/exc_hlp.hxx>
 #include <cppuhelper/compbase2.hxx>
 #include <cppuhelper/basemutex.hxx>
-#include <comphelper/anytostring.hxx>
 
 
 using namespace com::sun::star;
@@ -50,7 +49,7 @@ using namespace com::sun::star;
 namespace
 {
 
-typedef ::cppu::WeakComponentImplHelper2< 
+typedef ::cppu::WeakComponentImplHelper2<
     com::sun::star::task::XInteractionRequest,
     com::sun::star::task::XInteractionPassword > PDFPasswordRequestBase;
 
@@ -64,18 +63,18 @@ private:
 
 public:
     explicit PDFPasswordRequest(bool bFirstTry);
-    
+
     // XInteractionRequest
     virtual uno::Any SAL_CALL getRequest(  ) throw (uno::RuntimeException);
     virtual uno::Sequence< uno::Reference< task::XInteractionContinuation > > SAL_CALL getContinuations(  ) throw (uno::RuntimeException);
-    
+
     // XInteractionPassword
     virtual void SAL_CALL setPassword( const rtl::OUString& rPwd ) throw (uno::RuntimeException);
     virtual rtl::OUString SAL_CALL getPassword() throw (uno::RuntimeException);
 
     // XInteractionContinuation
     virtual void SAL_CALL select() throw (uno::RuntimeException);
-    
+
     bool isSelected() const { osl::MutexGuard const guard( m_aMutex ); return m_bSelected; }
 };
 
@@ -140,9 +139,9 @@ bool getPassword( const uno::Reference< task::XInteractionHandler >& xHandler,
                   bool                                               bFirstTry )
 {
     bool bSuccess = false;
-    
+
     PDFPasswordRequest* pRequest;
-    uno::Reference< task::XInteractionRequest > xReq( 
+    uno::Reference< task::XInteractionRequest > xReq(
         pRequest = new PDFPasswordRequest( bFirstTry ) );
     try
     {
@@ -150,21 +149,15 @@ bool getPassword( const uno::Reference< task::XInteractionHandler >& xHandler,
     }
     catch( uno::Exception& )
     {
-#if 0
-        OSL_ENSURE( false,
-                    rtl::OUStringToOString(
-                        comphelper::anyToString( cppu::getCaughtException() ),
-                        RTL_TEXTENCODING_UTF8 ).getStr() );
-#endif
     }
-    
+
     OSL_TRACE( "request %s selected\n", pRequest->isSelected() ? "was" : "was not" );
     if( pRequest->isSelected() )
     {
         bSuccess = true;
         rOutPwd = pRequest->getPassword();
     }
-    
+
     return bSuccess;
 }
 
