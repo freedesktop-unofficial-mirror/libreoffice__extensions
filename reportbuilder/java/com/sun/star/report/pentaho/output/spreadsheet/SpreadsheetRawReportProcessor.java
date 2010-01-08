@@ -107,7 +107,7 @@ public class SpreadsheetRawReportProcessor extends AbstractReportProcessor
         // second run: uses table cell data to output a single uniform table
         processReportRun(job, reportTarget);
     }
-    
+
     protected ReportContext createReportContext(final ReportJob job,
             final ReportTarget target)
     {
@@ -115,7 +115,7 @@ public class SpreadsheetRawReportProcessor extends AbstractReportProcessor
         if (context instanceof ReportContextImpl)
         {
             final ReportContextImpl impl = (ReportContextImpl) context;
-            impl.setFormulaContext(new PentahoFormulaContext(impl.getFormulaContext(),job.getConfiguration()));
+            impl.setFormulaContext(new PentahoFormulaContext(impl.getFormulaContext(), job.getConfiguration()));
         }
         return context;
     }
