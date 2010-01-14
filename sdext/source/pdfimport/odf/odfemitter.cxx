@@ -1,7 +1,7 @@
 /*************************************************************************
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
- * 
+ *
  * Copyright 2008 by Sun Microsystems, Inc.
  *
  * OpenOffice.org - a multi-platform office productivity suite
@@ -35,7 +35,6 @@
 #include "odfemitter.hxx"
 
 #include <rtl/ustrbuf.hxx>
-#include <comphelper/anytostring.hxx>
 #include <cppuhelper/exc_hlp.hxx>
 #include <com/sun/star/io/XInputStream.hpp>
 #include <com/sun/star/io/XOutputStream.hpp>
@@ -101,7 +100,7 @@ void OdfEmitter::beginTag( const char* pTag, const PropertyMap& rProperties )
     // platforms, and even between different compile-time settings),
     // sort the attributes.
     std::sort(aAttributes.begin(), aAttributes.end());
-    std::for_each(aAttributes.begin(), 
+    std::for_each(aAttributes.begin(),
                   aAttributes.end(),
                   boost::bind( (rtl::OUStringBuffer& (rtl::OUStringBuffer::*)(const rtl::OUString&))
                                (&rtl::OUStringBuffer::append),
