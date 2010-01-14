@@ -1,7 +1,7 @@
 /*************************************************************************
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
- * 
+ *
  * Copyright 2008 by Sun Microsystems, Inc.
  *
  * OpenOffice.org - a multi-platform office productivity suite
@@ -60,7 +60,6 @@
 #include <com/sun/star/container/XNameAccess.hpp>
 #include <com/sun/star/container/XContainerQuery.hpp>
 #include <com/sun/star/ucb/InteractiveAugmentedIOException.hpp>
-#include <comphelper/types.hxx>
 
 
 using namespace ::rtl;
