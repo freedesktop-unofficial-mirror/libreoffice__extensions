@@ -1,7 +1,7 @@
  /*************************************************************************
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
- * 
+ *
  * Copyright 2008 by Sun Microsystems, Inc.
  *
  * OpenOffice.org - a multi-platform office productivity suite
@@ -36,6 +36,8 @@
 #include "impoptimizer.hxx"
 #include <osl/file.hxx>
 
+#include <com/sun/star/lang/IllegalArgumentException.hpp>
+
 using namespace ::rtl;
 using namespace ::com::sun::star::uno;
 using namespace ::com::sun::star::util;
@@ -67,7 +69,7 @@ PPPOptimizer::~PPPOptimizer()
 void SAL_CALL PPPOptimizer::initialize( const Sequence< Any >& aArguments )
     throw ( Exception, RuntimeException )
 {
-    if( aArguments.getLength() != 1 ) 
+    if( aArguments.getLength() != 1 )
         throw IllegalArgumentException();
 
     Reference< XFrame > xFrame;
@@ -80,13 +82,13 @@ void SAL_CALL PPPOptimizer::initialize( const Sequence< Any >& aArguments )
 // XServiceInfo
 // -----------------------------------------------------------------------------
 
-OUString SAL_CALL PPPOptimizer::getImplementationName() 
+OUString SAL_CALL PPPOptimizer::getImplementationName()
     throw ( RuntimeException )
 {
     return PPPOptimizer_getImplementationName();
 }
 
-sal_Bool SAL_CALL PPPOptimizer::supportsService( const OUString& rServiceName ) 
+sal_Bool SAL_CALL PPPOptimizer::supportsService( const OUString& rServiceName )
     throw ( RuntimeException )
 {
     return rServiceName.equalsAsciiL( RTL_CONSTASCII_STRINGPARAM( SERVICE_NAME ) );
