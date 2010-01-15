@@ -2,44 +2,44 @@
 <!--***********************************************************************
  *
   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
-  
+
   Copyright 2008 by Sun Microsystems, Inc.
- 
+
   OpenOffice.org - a multi-platform office productivity suite
- 
+
   $RCSfile: build.xml,v $
- 
+
   $Revision: 1.20.8.1 $
- 
+
   This file is part of OpenOffice.org.
- 
+
   OpenOffice.org is free software: you can redistribute it and/or modify
   it under the terms of the GNU Lesser General Public License version 3
   only, as published by the Free Software Foundation.
- 
+
   OpenOffice.org is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU Lesser General Public License version 3 for more details
   (a copy is included in the LICENSE file that accompanied this code).
- 
+
   You should have received a copy of the GNU Lesser General Public License
   version 3 along with OpenOffice.org.  If not, see
   <http://www.openoffice.org/license.html>
   for a copy of the LGPLv3 License.
- 
+
  ************************************************************************ -->
 <project default="all">
     <target name="init">
         <property environment="env"/>
         <property name="ext" value="oxt"/>
-        <property name="officeroot" value="/export/home/mav/OFFICES/OOG680/m5_netbeans_pro"/>              
-        <property name="office.home" value="${officeroot}"/>              
+        <property name="officeroot" value="/export/home/mav/OFFICES/OOG680/m5_netbeans_pro"/>
+        <property name="office.home" value="${officeroot}"/>
 
         <!-- fallbacks for locations, when solenv is not used -->
         <condition property="target" value="wikiaddon">
             <not><isset property="target"/></not>
-        </condition>       
+        </condition>
         <condition property="out" value="./build">
             <not><isset property="out"/></not>
         </condition>
@@ -50,41 +50,41 @@
         <!-- locations used throughout the build -->
         <property name="name" value="wiki-publisher"/>
         <property name="dist" value="${out}/bin"/>
-        <property name="classes" value="${out}/class"/>                
-        <property name="classes.test" value="${out}/class-test"/>   
+        <property name="classes" value="${out}/class"/>
+        <property name="classes.test" value="${out}/class-test"/>
         <property name="officeclasses" value="${solar.jar}"/>
-                
+
         <!-- build options -->
-        <property name="sourcelevel" value="1.4"/>    
-        <property name="verbose" value="false"/>    
+        <property name="sourcelevel" value="1.4"/>
+        <property name="verbose" value="false"/>
         <property name="debug" value="true"/>
-        
+
         <!-- build classpath -->
-        <path id="classpath">        
+        <path id="classpath">
             <pathelement location="${officeclasses}/juh.jar"/>
             <pathelement location="${officeclasses}/jurt.jar"/>
             <pathelement location="${officeclasses}/ridl.jar"/>
-            <pathelement location="${officeclasses}/unoil.jar"/>            
+            <pathelement location="${officeclasses}/unoil.jar"/>
             <!-- 3rd party libs -->
             <pathelement location="${commons-codec-jar}"/>
             <pathelement location="${commons-httpclient-jar}"/>
             <pathelement location="${commons-lang-jar}"/>
             <pathelement location="${commons-logging-jar}"/>
         </path>
-        
+
         <!-- create output directories -->
         <mkdir dir="${classes}"/>
         <mkdir dir="${classes.test}"/>
         <mkdir dir="${dist}"/>
     </target>
-    
+
     <target name="compile" depends="init">
         <javac debug="${debug}" destdir="${classes}" classpathref="classpath"
-               source="${sourcelevel}" verbose="${verbose}">               
+               source="${sourcelevel}" verbose="${verbose}">
             <src path="src"/>
         </javac>
     </target>
- 
+
     <target name="xcucheck" depends="init">
         <condition property="no.merge.present">
             <not>
@@ -96,19 +96,19 @@
     <target name="xcumerge" depends="xcucheck, init" if="no.merge.present">
         <copy todir="${out}/misc/${target}/merge">
             <fileset dir="${out}/misc/${target}/registry/data" includes="**/*.xcu" casesensitive="yes"/>
-        </copy> 
+        </copy>
     </target>
 
     <target name="jar" depends="compile, init">
         <jar basedir="${classes}" compress="true" jarfile="${dist}/${target}.jar">
             <manifest>
-        <!-- FIXME: Set Class-Path correctly for the system case !-->		
+        <!-- FIXME: Set Class-Path correctly for the system case !-->
                 <attribute name="Class-Path" value="commons-codec-1.3.jar commons-lang-2.3.jar commons-httpclient-3.1.jar commons-logging-1.1.1.jar"/>
                 <attribute name="RegistrationClassName" value="com.sun.star.wiki.WikiEditorImpl"/>
-            </manifest>            
+            </manifest>
         </jar>
     </target>
- 
+
     <target name="tmpdir" depends="xcumerge, jar, init">
         <copy todir="${out}/misc/${target}/package_tmp" overwrite="true" encoding="UTF-8">
             <fileset dir="${out}/misc/${target}" includes="description.xml" casesensitive="yes"/>
@@ -147,8 +147,8 @@
             <file file="${commons-httpclient-jar}"/>
             <file file="${commons-lang-jar}"/>
             <file file="${commons-logging-jar}"/>
-            <zipfileset file="${solar.bin}/xslt/export/wiki/odt2mediawiki.xsl" casesensitive="yes" fullpath="filter/odt2mediawiki.xsl"/>
-            <zipfileset file="${solar.bin}/xslt/export/wiki/mediawiki.ott" casesensitive="yes" fullpath="templates/MediaWiki/mediawiki.ott"/>
+            <zipfileset file="src/filter/odt2mediawiki.xsl" casesensitive="yes" fullpath="filter/odt2mediawiki.xsl"/>
+            <zipfileset file="src/filter/mediawiki.ott" casesensitive="yes" fullpath="templates/MediaWiki/mediawiki.ott"/>
             <zipfileset dir="${solar.bin}/xslt/export/xsltml" casesensitive="yes" prefix="filter/math"/>
             <zipfileset dir="src" includes="uno-extension-manifest.xml" casesensitive="yes" fullpath="META-INF/manifest.xml"/>
             <zipfileset dir="dialogs" includes="**/*.xdl,**/*.xba,**/*.xlb" casesensitive="yes" prefix="WikiEditor"/>
@@ -156,7 +156,7 @@
             <zipfileset dir="src" includes="THIRDPARTYLICENSEREADME.html" casesensitive="yes" prefix="license"/>
         </zip>
     </target>
- 
+
     <target name="development-package" depends="jar, init">
         <delete file="${dist}/${target}_develop.zip"/>
         <zip  destfile="${dist}/${target}_develop.zip">
@@ -170,6 +170,8 @@
             <fileset dir="${out}/misc/${target}/merge/org/openoffice/TypeDetection" includes="*.xcu" casesensitive="yes"/>
          -->
             <fileset dir="src/registry/data/org/openoffice/TypeDetection" includes="*.xcu" casesensitive="yes"/>
+            <zipfileset file="src/filter/odt2mediawiki.xsl" casesensitive="yes" fullpath="filter/odt2mediawiki.xsl"/>
+            <zipfileset file="src/filter/mediawiki.ott" casesensitive="yes" fullpath="templates/MediaWiki/mediawiki.ott"/>
             <zipfileset dir="${out}/misc/${target}/help" includes="**/*.xhp,component.txt" casesensitive="yes" prefix="help"/>
             <zipfileset dir="dialogs" includes="**/*.xdl,**/*.xba,**/*.xlb" casesensitive="yes" prefix="WikiEditor"/>
             <zipfileset dir="src" includes="uno-extension-manifest.xml" casesensitive="yes" fullpath="META-INF/manifest.xml"/>
@@ -190,8 +192,8 @@
         <delete dir="${dist}/${target}_develop.zip"/>
     </target>
 
-    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->    
-    
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
     <target name="uno-deploy" description="Deploys UNO extension package" depends="uno-package">
         <echo message="deploying UNO extension package ..."/>
         <echo message="${office.unopkg} add -f ${uno.package.name}"/>
@@ -199,11 +201,11 @@
             <arg value="add"/>
             <arg value="-f"/>
             <arg file="${uno.package.name}"/>
-        </exec>           
+        </exec>
     </target>
 
-    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->    
-    
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
     <target name="uno-debug" description="Debugss UNO extension package in Target Office" depends="uno-package">
         <!-- security fail for executing this without netbeans -->
         <fail unless="netbeans.home">This target can only run inside the NetBeans IDE.</fail>
@@ -222,7 +224,7 @@
             <arg value="-f"/>
             <arg file="${uno.package.name}"/>
             <env key="UserInstallation" value="${office.debug.user.directory}"/>
-        </exec>           
+        </exec>
         <!-- start Office with debug Java and user installation -->
         <echo message="  starting the Office with ..."/>
         <echo message="  user installation: ${office.debug.user.directory}"/>
@@ -232,6 +234,6 @@
         <exec executable="${office.soffice}" dir="${office.program.dir}" failonerror="true">
             <env key="UserInstallation" value="${office.debug.user.directory}"/>
             <env key="JAVA_TOOL_OPTIONS" value="&quot;-Xdebug&quot; &quot;-Xrunjdwp:transport=dt_socket,address=${jpda.address}&quot;"/>
-        </exec>           
+        </exec>
    </target>
 </project>
