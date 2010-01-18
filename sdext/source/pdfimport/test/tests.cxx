@@ -1,7 +1,7 @@
 /*************************************************************************
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
- * 
+ *
  * Copyright 2008 by Sun Microsystems, Inc.
  *
  * OpenOffice.org - a multi-platform office productivity suite
@@ -48,7 +48,7 @@
 #include <rtl/math.hxx>
 #include <osl/file.hxx>
 #include <osl/process.h>
-#include <cppunit/simpleheader.hxx>
+#include <testshl/simpleheader.hxx>
 #include <cppuhelper/compbase1.hxx>
 #include <cppuhelper/bootstrap.hxx>
 #include <cppuhelper/basemutex.hxx>
@@ -62,7 +62,7 @@
 #include <com/sun/star/rendering/BlendMode.hpp>
 #include <com/sun/star/lang/XMultiServiceFactory.hpp>
 #include <com/sun/star/lang/XInitialization.hpp>
-#include <com/sun/star/registry/XSimpleRegistry.hpp> 
+#include <com/sun/star/registry/XSimpleRegistry.hpp>
 
 #include <basegfx/matrix/b2dhommatrix.hxx>
 #include <basegfx/tools/canvastools.hxx>
@@ -123,7 +123,7 @@ namespace
             CPPUNIT_ASSERT_MESSAGE( "Imported text is \"This is a testtext New paragraph, new line"
                                     " Hyperlink, this is * This is more text outline mode * New paragraph\"",
                                     sText == aTmp );
-            
+
             CPPUNIT_ASSERT_MESSAGE( "red circle seen in input", m_bRedCircleSeen );
             CPPUNIT_ASSERT_MESSAGE( "green stroke seen in input", m_bGreenStrokeSeen );
             CPPUNIT_ASSERT_MESSAGE( "dashed line seen in input", m_bDashedLineSeen );
@@ -147,7 +147,7 @@ namespace
         {
             m_bPageEnded = true;
         }
-        
+
         virtual void hyperLink( const geometry::RealRectangle2D& rBounds,
                                 const ::rtl::OUString&             rURI )
         {
@@ -167,7 +167,7 @@ namespace
 
         virtual void setTransformation( const geometry::AffineMatrix2D& rMatrix )
         {
-            basegfx::unotools::homMatrixFromAffineMatrix( 
+            basegfx::unotools::homMatrixFromAffineMatrix(
                 getCurrentContext().Transformation,
                 rMatrix );
         }
@@ -266,7 +266,7 @@ namespace
                                         rContext.DashArray[0] == rContext.DashArray[1] &&
                                         rContext.DashArray[1] == rContext.DashArray[2] &&
                                         rContext.DashArray[2] == rContext.DashArray[3] );
-                
+
                 CPPUNIT_ASSERT_MESSAGE( "Line color is black",
                                         rContext.LineColor.Alpha == 1.0 &&
                                         rContext.LineColor.Red == 0.0 &&
@@ -340,15 +340,15 @@ namespace
 
             m_bRedCircleSeen = true;
         }
-        
+
         virtual void intersectClip(const uno::Reference<rendering::XPolyPolygon2D>& rPath)
         {
             basegfx::B2DPolyPolygon aNewClip = basegfx::unotools::b2DPolyPolygonFromXPolyPolygon2D(rPath);
             basegfx::B2DPolyPolygon aCurClip = getCurrentContext().Clip;
-    
+
             if( aCurClip.count() )  // #i92985# adapted API from (..., false, false) to (..., true, false)
                 aNewClip = basegfx::tools::clipPolyPolygonOnPolyPolygon( aCurClip, aNewClip, true, false );
-    
+
             getCurrentContext().Clip = aNewClip;
         }
 
@@ -356,13 +356,13 @@ namespace
         {
             basegfx::B2DPolyPolygon aNewClip = basegfx::unotools::b2DPolyPolygonFromXPolyPolygon2D(rPath);
             basegfx::B2DPolyPolygon aCurClip = getCurrentContext().Clip;
-    
+
             if( aCurClip.count() )  // #i92985# adapted API from (..., false, false) to (..., true, false)
                 aNewClip = basegfx::tools::clipPolyPolygonOnPolyPolygon( aCurClip, aNewClip, true, false );
-    
+
             getCurrentContext().Clip = aNewClip;
         }
-        
+
         virtual void drawGlyphs( const rtl::OUString&             rGlyphs,
                                  const geometry::RealRectangle2D& /*rRect*/,
                                  const geometry::Matrix2D&        /*rFontMatrix*/ )
@@ -388,9 +388,9 @@ namespace
 
         virtual void drawImage(const uno::Sequence<beans::PropertyValue>& xBitmap )
         {
-            CPPUNIT_ASSERT_MESSAGE( "drawImage received two properties", 
+            CPPUNIT_ASSERT_MESSAGE( "drawImage received two properties",
                                     xBitmap.getLength()==3 );
-            CPPUNIT_ASSERT_MESSAGE( "drawImage got URL param", 
+            CPPUNIT_ASSERT_MESSAGE( "drawImage got URL param",
                                     xBitmap[0].Name.compareToAscii( "URL" ) == 0 );
             CPPUNIT_ASSERT_MESSAGE( "drawImage got InputStream param",
                                     xBitmap[1].Name.compareToAscii( "InputStream" ) == 0 );
@@ -399,7 +399,7 @@ namespace
         virtual void drawColorMaskedImage(const uno::Sequence<beans::PropertyValue>& xBitmap,
                                           const uno::Sequence<uno::Any>&             /*xMaskColors*/ )
         {
-            CPPUNIT_ASSERT_MESSAGE( "drawColorMaskedImage received two properties", 
+            CPPUNIT_ASSERT_MESSAGE( "drawColorMaskedImage received two properties",
                                     xBitmap.getLength()==3 );
             CPPUNIT_ASSERT_MESSAGE( "drawColorMaskedImage got URL param",
                                     xBitmap[0].Name.compareToAscii( "URL" ) == 0 );
@@ -411,7 +411,7 @@ namespace
                                      const uno::Sequence<beans::PropertyValue>& xMask,
                                      bool                                       /*bInvertMask*/)
         {
-            CPPUNIT_ASSERT_MESSAGE( "drawMaskedImage received two properties #1", 
+            CPPUNIT_ASSERT_MESSAGE( "drawMaskedImage received two properties #1",
                                     xBitmap.getLength()==3 );
             CPPUNIT_ASSERT_MESSAGE( "drawMaskedImage got URL param #1",
                                     xBitmap[0].Name.compareToAscii( "URL" ) == 0 );
@@ -447,10 +447,10 @@ namespace
         virtual void setTextRenderMode( sal_Int32 )
         {
         }
-        
+
         typedef std::hash_map<sal_Int32,FontAttributes> IdToFontMap;
         typedef std::hash_map<FontAttributes,sal_Int32,FontAttrHash> FontToIdMap;
-        
+
         typedef std::hash_map<sal_Int32,GraphicsContext> IdToGCMap;
         typedef std::hash_map<GraphicsContext,sal_Int32,GraphicsContextHash> GCToIdMap;
 
@@ -459,7 +459,7 @@ namespace
         sal_Int32                 m_nNextFontId;
         IdToFontMap               m_aIdToFont;
         FontToIdMap               m_aFontToId;
-        
+
         GraphicsContextStack      m_aGCStack;
         geometry::RealSize2D      m_aPageSize;
         geometry::RealRectangle2D m_aHyperlinkBounds;
@@ -479,9 +479,9 @@ namespace
         bool                                   mbUnoInitialized;
 
     public:
-        PDFITest() : mxCtx(),msBaseDir(),mbUnoInitialized(false) 
+        PDFITest() : mxCtx(),msBaseDir(),mbUnoInitialized(false)
         {}
-        
+
         void setUp()
         {
             if( !mbUnoInitialized )
@@ -495,10 +495,10 @@ namespace
                 try
                 {
                     ::rtl::OUString aIniUrl;
-                    CPPUNIT_ASSERT_MESSAGE( 
+                    CPPUNIT_ASSERT_MESSAGE(
                         "Converting ini file to URL",
-                        osl_getFileURLFromSystemPath( 
-                            (msBaseDir+rtl::OUString::createFromAscii("pdfi_unittest_test.ini")).pData, 
+                        osl_getFileURLFromSystemPath(
+                            (msBaseDir+rtl::OUString::createFromAscii("pdfi_unittest_test.ini")).pData,
                             &aIniUrl.pData ) == osl_File_E_None );
 
                     mxCtx = ::cppu::defaultBootstrap_InitialComponentContext(aIniUrl);
@@ -520,7 +520,7 @@ namespace
         {
             pdfi::ContentSinkSharedPtr pSink( new TestSink() );
             pdfi::xpdf_ImportFromFile( msBaseDir + rtl::OUString::createFromAscii("pdfi_unittest_test.pdf"),
-                                       pSink, 
+                                       pSink,
                                        uno::Reference< task::XInteractionHandler >(),
                                        rtl::OUString(),
                                        mxCtx );
@@ -536,11 +536,11 @@ namespace
             aAdaptor.setTreeVisitorFactory( createDrawTreeVisitorFactory() );
 
             ::rtl::OUString aURL, aAbsURL, aBaseURL;
-            osl_getFileURLFromSystemPath( (msBaseDir + rtl::OUString::createFromAscii("pdfi_unittest_draw.xml")).pData, 
+            osl_getFileURLFromSystemPath( (msBaseDir + rtl::OUString::createFromAscii("pdfi_unittest_draw.xml")).pData,
                                           &aURL.pData );
             osl_getProcessWorkingDir(&aBaseURL.pData);
             osl_getAbsoluteFileURL(aBaseURL.pData,aURL.pData,&aAbsURL.pData);
-            CPPUNIT_ASSERT_MESSAGE("Exporting to ODF", 
+            CPPUNIT_ASSERT_MESSAGE("Exporting to ODF",
                                    aAdaptor.odfConvert( msBaseDir + rtl::OUString::createFromAscii("pdfi_unittest_test.pdf"),
                                                         new OutputWrap(aAbsURL),
                                                         NULL ));
@@ -552,11 +552,11 @@ namespace
             aAdaptor.setTreeVisitorFactory( createWriterTreeVisitorFactory() );
 
             ::rtl::OUString aURL, aAbsURL, aBaseURL;
-            osl_getFileURLFromSystemPath( (msBaseDir + rtl::OUString::createFromAscii("pdfi_unittest_writer.xml")).pData, 
+            osl_getFileURLFromSystemPath( (msBaseDir + rtl::OUString::createFromAscii("pdfi_unittest_writer.xml")).pData,
                                           &aURL.pData );
             osl_getProcessWorkingDir(&aBaseURL.pData);
             osl_getAbsoluteFileURL(aBaseURL.pData,aURL.pData,&aAbsURL.pData);
-            CPPUNIT_ASSERT_MESSAGE("Exporting to ODF", 
+            CPPUNIT_ASSERT_MESSAGE("Exporting to ODF",
                                    aAdaptor.odfConvert( msBaseDir + rtl::OUString::createFromAscii("pdfi_unittest_test.pdf"),
                                                         new OutputWrap(aAbsURL),
                                                         NULL ));
@@ -568,7 +568,7 @@ namespace
         CPPUNIT_TEST(testOdfDrawExport);
         CPPUNIT_TEST_SUITE_END();
     };
-    
+
 }
 
 // =======================================================================
