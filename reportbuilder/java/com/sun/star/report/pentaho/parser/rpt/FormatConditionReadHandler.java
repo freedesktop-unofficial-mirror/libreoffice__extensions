@@ -61,8 +61,8 @@ public class FormatConditionReadHandler extends AbstractXmlReadHandler
     protected void startParsing(final Attributes attrs) throws SAXException
     {
         super.startParsing(attrs);
-        
-        
+
+
         final String formula =
                 attrs.getValue(OfficeNamespaces.OOREPORT_NS, "formula");
         if (formula == null)
