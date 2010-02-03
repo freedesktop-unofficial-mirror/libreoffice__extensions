@@ -68,7 +68,7 @@ public class FunctionReadHandler extends AbstractXmlReadHandler
         {
             throw new ParseException("Required attribute 'formula' is missing", getLocator());
         }
-        
+
         final String name = attrs.getValue(OfficeNamespaces.OOREPORT_NS, "name");
         if (name == null)
         {
