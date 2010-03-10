@@ -1,14 +1,10 @@
 #*************************************************************************
 #
 # DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
-#
-# Copyright 2008 by Sun Microsystems, Inc.
+# 
+# Copyright 2000, 2010 Oracle and/or its affiliates.
 #
 # OpenOffice.org - a multi-platform office productivity suite
-#
-# $RCSfile: makefile.mk,v $
-#
-# $Revision: 1.10 $
 #
 # This file is part of OpenOffice.org.
 #
@@ -131,12 +127,11 @@ FIND_XCU=registry/data
 FIND_XCU=$(MISC)$/$(EXTNAME)_in$/merge
 .ENDIF			# "$(WITH_LANG)"==""
 
-
 COMPONENT_FILES=																			\
     $(ZIP1DIR)$/registry$/data$/org$/openoffice$/Office$/Jobs.xcu							\
     $(ZIP1DIR)$/registry$/data$/org$/openoffice$/Office$/ProtocolHandler.xcu				\
-    $(ZIP1DIR)$/registry$/schema/org$/openoffice$/Office$/extension$/PresenterScreen.xcs   \
-   $(ZIP1DIR)$/registry$/data/$/org$/openoffice$/Office$/extension$/PresenterScreen.xcu 
+    $(ZIP1DIR)$/registry$/schema/org$/openoffice$/Office$/extension$/PresenterScreen.xcs   	\
+    $(ZIP1DIR)$/registry$/data/$/org$/openoffice$/Office$/extension$/PresenterScreen.xcu 
 
 #COMPONENT_MERGED_XCU= \
 #	$(FIND_XCU)$/org$/openoffice$/Office$/extension$/PresenterScreen.xcu 
@@ -236,7 +231,9 @@ COMPONENT_BITMAPS=												\
                                                                 \
     $(ZIP1DIR)$/bitmaps$/LabelMouseOverLeft.png					\
     $(ZIP1DIR)$/bitmaps$/LabelMouseOverCenter.png				\
-    $(ZIP1DIR)$/bitmaps$/LabelMouseOverRight.png
+    $(ZIP1DIR)$/bitmaps$/LabelMouseOverRight.png                \
+    $(ZIP1DIR)$/bitmaps$/em47.png                               \
+    $(ZIP1DIR)$/bitmaps$/em47_hc.png
 
 COMPONENT_MANIFEST= 							\
     $(ZIP1DIR)$/META-INF$/manifest.xml
@@ -244,8 +241,15 @@ COMPONENT_MANIFEST= 							\
 COMPONENT_LIBRARY= 								\
     $(ZIP1DIR)$/$(TARGET).uno$(DLLPOST)
 
+PLATFORMID:=$(RTL_OS:l)_$(RTL_ARCH:l)
+
 COMPONENT_HELP= 								\
-    $(ZIP1DIR)$/help/component.txt
+    $(ZIP1DIR)$/help/component.txt				\
+    $(foreach,l,$(alllangiso) $(ZIP1DIR)$/help$/$l$/com.sun.PresenterScreen-$(PLATFORMID)$/presenter.xhp)
+#	$(ZIP1DIR)$/help$/en-US$/com.sun.PresenterScreen-$(PLATFORMID)$/presenter.xhp
+
+# no localization yet - see #i107498#
+#	$(foreach,l,$(alllangiso) $(ZIP1DIR)$/help$/$l$/com.sun.PresenterScreen-$(PLATFORMID)$/presenter.xhp)
 
 ZIP1DEPS=					\
     $(PACKLICS) 			\
@@ -257,7 +261,6 @@ ZIP1DEPS=					\
     $(COMPONENT_HELP)
 #	$(COMPONENT_MERGED_XCU) \
 
-PLATFORMID:=$(RTL_OS:l)_$(RTL_ARCH:l)
 
 
 # --- Targets ----------------------------------
@@ -274,13 +277,14 @@ $(COMPONENT_MANIFEST) : $$(@:f)
     @-$(MKDIRHIER) $(@:d)
     +$(TYPE) $< | $(SED) "s/SHARED_EXTENSION/$(DLLPOST)/" > $@
 
-$(COMPONENT_HELP) : help$/$$(@:f)
+$(ZIP1DIR)$/help$/component.txt : help$/$$(@:f)
     @@-$(MKDIRHIER) $(@:d)
     $(COPY) $< $@
 
-#$(COMPONENT_FILES) : $$(@:f)
-#	-$(MKDIRHIER) $(@:d)
-#	$(COPY) $< $@
+$(ZIP1DIR)$/help$/%$/com.sun.PresenterScreen-$(PLATFORMID)$/presenter.xhp : $(COMMONMISC)/%/com.sun.PresenterScreen/presenter.xhp
+    @echo creating $@
+    @@-$(MKDIRHIER) $(@:d)
+    $(TYPE) $< | sed "s/PLATFORMID/$(PLATFORMID)/" > $@
 
 $(COMPONENT_BITMAPS) : bitmaps$/$$(@:f)
     @-$(MKDIRHIER) $(@:d)
