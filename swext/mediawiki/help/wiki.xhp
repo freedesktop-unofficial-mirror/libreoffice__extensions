@@ -2,7 +2,7 @@
 <!--***********************************************************************
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
- * 
+ *
  * Copyright 2008 by Sun Microsystems, Inc.
  *
  * OpenOffice.org - a multi-platform office productivity suite
@@ -28,7 +28,7 @@
  * for a copy of the LGPLv3 License.
  *
  ************************************************************************ -->
-	
+
 <helpdocument version="1.0">
 <meta>
 <topic id="comsunstarwikiMediaWikiwikixml" indexer="include" status="PUBLISH">
@@ -52,6 +52,9 @@
 <paragraph role="paragraph" id="par_id6468703" xml-lang="en-US" l10n="NEW"><ahelp hid=".">Choose <item type="menuitem">File - Send - To MediaWiki</item> to upload the current Writer document to a MediaWiki server.</ahelp></paragraph>
 <paragraph role="heading" id="hd_id4554582" xml-lang="en-US" level="2" l10n="NEW">System Requirements</paragraph>
 <list type="unordered">
+<listitem>
+<paragraph role="paragraph" id="par_id2597431" xml-lang="en-US" l10n="NEW">Oracle Open Office 3</paragraph>
+</listitem>
 <listitem>
 <paragraph role="paragraph" id="par_id2597430" xml-lang="en-US" l10n="NEW">StarOffice/StarSuite 9</paragraph>
 </listitem>
