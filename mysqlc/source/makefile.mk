@@ -115,7 +115,7 @@ CDEFS+=-DCPPDBC_EXPORTS -DCPPCONN_LIB_BUILD
 .IF "$(SYSTEM_MYSQL_CPPCONN)" != "YES"
 CDEFS += -DCPPCONN_LIB=\"$(DLLPRE)mysqlcppconn$(DLLPOST)\"
 .ELSE
-CDEFS += -DCPPCONN_LIB=\"libmysqlcppconn.so.2\"
+CDEFS += -DCPPCONN_LIB=\"$(shell readlink /usr/lib/libmysqlcppconn.so)\"
 .ENDIF
 
 # --------------- MySQL settings ------------------
