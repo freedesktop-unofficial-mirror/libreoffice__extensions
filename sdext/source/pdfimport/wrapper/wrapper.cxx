@@ -1,14 +1,10 @@
 /*************************************************************************
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
- *
- * Copyright 2008 by Sun Microsystems, Inc.
+ * 
+ * Copyright 2000, 2010 Oracle and/or its affiliates.
  *
  * OpenOffice.org - a multi-platform office productivity suite
- *
- * $RCSfile: wrapper.cxx,v $
- *
- * $Revision: 1.2.4.1 $
  *
  * This file is part of OpenOffice.org.
  *
@@ -201,6 +197,60 @@ public:
     void parseLine( const ::rtl::OString& rLine );
 };
 
+
+namespace
+{
+
+    /** Unescapes line-ending characters in input string. These
+        characters are encoded as pairs of characters: '\\' 'n', resp.
+        '\\' 'r'. This function converts them back to '\n', resp. '\r'.
+      */
+    rtl::OString lcl_unescapeLineFeeds(const rtl::OString& i_rStr)
+    {
+        const size_t nOrigLen(sal::static_int_cast<size_t>(i_rStr.getLength()));
+        const sal_Char* const pOrig(i_rStr.getStr());
+        sal_Char* const pBuffer(new sal_Char[nOrigLen + 1]);
+
+        const sal_Char* pRead(pOrig);
+        sal_Char* pWrite(pBuffer);
+        const sal_Char* pCur(pOrig);
+        while ((pCur = strchr(pCur, '\\')) != 0)
+        {
+            const sal_Char cNext(pCur[1]);
+            if (cNext == 'n' || cNext == 'r' || cNext == '\\')
+            {
+                const size_t nLen(pCur - pRead);
+                strncpy(pWrite, pRead, nLen);
+                pWrite += nLen;
+                *pWrite = cNext == 'n' ? '\n' : (cNext == 'r' ? '\r' : '\\');
+                ++pWrite;
+                pCur = pRead = pCur + 2;
+            }
+            else
+            {
+                // Just continue on the next character. The current
+                // block will be copied the next time it goes through the
+                // 'if' branch.
+                ++pCur;
+            }
+        }
+        // maybe there are some data to copy yet
+        if (sal::static_int_cast<size_t>(pRead - pOrig) < nOrigLen)
+        {
+            const size_t nLen(nOrigLen - (pRead - pOrig));
+            strncpy(pWrite, pRead, nLen);
+            pWrite += nLen;
+        }
+        *pWrite = '\0';
+
+        rtl::OString aResult(pBuffer);
+        delete[] pBuffer;
+        return aResult;
+    }
+
+}
+
+
 ::rtl::OString Parser::readNextToken()
 {
     OSL_PRECOND(m_nCharIndex!=-1,"insufficient input");
@@ -326,7 +376,7 @@ void Parser::readChar()
     readDouble(aUnoMatrix.m10);
     readDouble(aUnoMatrix.m11);
 
-    rtl::OString aChars = m_aLine.copy( m_nCharIndex );
+    rtl::OString aChars = lcl_unescapeLineFeeds( m_aLine.copy( m_nCharIndex ) );
 
     // chars gobble up rest of line
     m_nCharIndex = -1;
@@ -480,7 +530,7 @@ void Parser::readFont()
     readInt32(nFileLen);
 
     nSize = nSize < 0.0 ? -nSize : nSize;
-    aFontName = m_aLine.copy( m_nCharIndex );
+    aFontName = lcl_unescapeLineFeeds( m_aLine.copy( m_nCharIndex ) );
 
     // name gobbles up rest of line
     m_nCharIndex = -1;
@@ -672,8 +722,9 @@ void Parser::readLink()
     readDouble(aBounds.Y2);
 
     m_pSink->hyperLink( aBounds,
-                        rtl::OStringToOUString( m_aLine.copy(m_nCharIndex),
-                                                RTL_TEXTENCODING_UTF8 ));
+                        rtl::OStringToOUString( lcl_unescapeLineFeeds(
+                                m_aLine.copy(m_nCharIndex) ),
+                                RTL_TEXTENCODING_UTF8 ) );
     // name gobbles up rest of line
     m_nCharIndex = -1;
 }
@@ -710,7 +761,7 @@ void Parser::parseLine( const ::rtl::OString& rLine )
     OSL_PRECOND( m_pSink,         "Invalid sink" );
     OSL_PRECOND( m_pErr,          "Invalid filehandle" );
     OSL_PRECOND( m_xContext.is(), "Invalid service factory" );
-
+    
     m_nNextToken = 0; m_nCharIndex = 0; m_aLine = rLine;
     uno::Reference<rendering::XPolyPolygon2D> xPoly;
     const ::rtl::OString& rCmd = readNextToken();
