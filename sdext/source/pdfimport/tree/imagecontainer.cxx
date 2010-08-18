@@ -2,13 +2,9 @@
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  * 
- * Copyright 2008 by Sun Microsystems, Inc.
+ * Copyright 2000, 2010 Oracle and/or its affiliates.
  *
  * OpenOffice.org - a multi-platform office productivity suite
- *
- * $RCSfile: imagecontainer.cxx,v $
- *
- * $Revision: 1.2 $
  *
  * This file is part of OpenOffice.org.
  *
@@ -53,7 +49,7 @@ using namespace com::sun::star;
 namespace pdfi
 {
 
-namespace 
+namespace
 {
 
 static const sal_Char aBase64EncodeTable[] =
@@ -76,16 +72,16 @@ rtl::OUString encodeBase64( const sal_Int8* i_pBuffer, const sal_uInt32 i_nBuffe
                                   ((sal_uInt8)i_pBuffer[i + 2]);
 
         aBuf.appendAscii("====");
-    
+
         sal_uInt8 nIndex (static_cast<sal_uInt8>((nBinary & 0xFC0000) >> 18));
         aBuf.setCharAt(nBufPos, aBase64EncodeTable [nIndex]);
-    
+
         nIndex = static_cast<sal_uInt8>((nBinary & 0x3F000) >> 12);
         aBuf.setCharAt(nBufPos+1, aBase64EncodeTable [nIndex]);
-    
+
         nIndex = static_cast<sal_uInt8>((nBinary & 0xFC0) >> 6);
         aBuf.setCharAt(nBufPos+2, aBase64EncodeTable [nIndex]);
-    
+
         nIndex = static_cast<sal_uInt8>((nBinary & 0x3F));
         aBuf.setCharAt(nBufPos+3, aBase64EncodeTable [nIndex]);
     }
@@ -104,21 +100,21 @@ rtl::OUString encodeBase64( const sal_Int8* i_pBuffer, const sal_uInt32 i_nBuffe
         }
         sal_uInt8 nIndex (static_cast<sal_uInt8>((nBinary & 0xFC0000) >> 18));
         aBuf.setCharAt(nBufPos, aBase64EncodeTable [nIndex]);
-    
+
         nIndex = static_cast<sal_uInt8>((nBinary & 0x3F000) >> 12);
         aBuf.setCharAt(nBufPos+1, aBase64EncodeTable [nIndex]);
-    
+
         if( nRemain == 2 )
         {
             nIndex = static_cast<sal_uInt8>((nBinary & 0xFC0) >> 6);
             aBuf.setCharAt(nBufPos+2, aBase64EncodeTable [nIndex]);
         }
     }
-    
+
     return aBuf.makeStringAndClear();
 }
 
-} // namespace 
+} // namespace
 
 ImageContainer::ImageContainer() :
     m_aImages()

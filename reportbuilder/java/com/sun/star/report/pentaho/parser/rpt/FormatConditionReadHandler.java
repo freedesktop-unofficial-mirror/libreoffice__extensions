@@ -2,12 +2,9 @@
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  * 
- * Copyright 2008 by Sun Microsystems, Inc.
+ * Copyright 2000, 2010 Oracle and/or its affiliates.
  *
  * OpenOffice.org - a multi-platform office productivity suite
- *
- * $RCSfile: FormatConditionReadHandler.java,v $
- * $Revision: 1.5 $
  *
  * This file is part of OpenOffice.org.
  *
@@ -29,13 +26,16 @@
  ************************************************************************/
 package com.sun.star.report.pentaho.parser.rpt;
 
+import com.sun.star.report.OfficeToken;
+import com.sun.star.report.pentaho.OfficeNamespaces;
 import com.sun.star.report.pentaho.model.FormatCondition;
 import com.sun.star.report.pentaho.model.ReportElement;
-import com.sun.star.report.pentaho.OfficeNamespaces;
-import com.sun.star.report.OfficeToken;
+
 import org.jfree.report.expressions.FormulaExpression;
+
 import org.pentaho.reporting.libraries.xmlns.parser.AbstractXmlReadHandler;
 import org.pentaho.reporting.libraries.xmlns.parser.ParseException;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -61,8 +61,8 @@ public class FormatConditionReadHandler extends AbstractXmlReadHandler
     protected void startParsing(final Attributes attrs) throws SAXException
     {
         super.startParsing(attrs);
-        
-        
+
+
         final String formula =
                 attrs.getValue(OfficeNamespaces.OOREPORT_NS, "formula");
         if (formula == null)

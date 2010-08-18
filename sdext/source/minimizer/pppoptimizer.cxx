@@ -2,13 +2,9 @@
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  * 
- * Copyright 2008 by Sun Microsystems, Inc.
+ * Copyright 2000, 2010 Oracle and/or its affiliates.
  *
  * OpenOffice.org - a multi-platform office productivity suite
- *
- * $RCSfile: pppoptimizer.cxx,v $
- *
- * $Revision: 1.3 $
  *
  * This file is part of OpenOffice.org.
  *
@@ -35,6 +31,8 @@
 #include "pppoptimizer.hxx"
 #include "impoptimizer.hxx"
 #include <osl/file.hxx>
+
+#include <com/sun/star/lang/IllegalArgumentException.hpp>
 
 using namespace ::rtl;
 using namespace ::com::sun::star::uno;
@@ -67,7 +65,7 @@ PPPOptimizer::~PPPOptimizer()
 void SAL_CALL PPPOptimizer::initialize( const Sequence< Any >& aArguments )
     throw ( Exception, RuntimeException )
 {
-    if( aArguments.getLength() != 1 ) 
+    if( aArguments.getLength() != 1 )
         throw IllegalArgumentException();
 
     Reference< XFrame > xFrame;
@@ -80,13 +78,13 @@ void SAL_CALL PPPOptimizer::initialize( const Sequence< Any >& aArguments )
 // XServiceInfo
 // -----------------------------------------------------------------------------
 
-OUString SAL_CALL PPPOptimizer::getImplementationName() 
+OUString SAL_CALL PPPOptimizer::getImplementationName()
     throw ( RuntimeException )
 {
     return PPPOptimizer_getImplementationName();
 }
 
-sal_Bool SAL_CALL PPPOptimizer::supportsService( const OUString& rServiceName ) 
+sal_Bool SAL_CALL PPPOptimizer::supportsService( const OUString& rServiceName )
     throw ( RuntimeException )
 {
     return rServiceName.equalsAsciiL( RTL_CONSTASCII_STRINGPARAM( SERVICE_NAME ) );

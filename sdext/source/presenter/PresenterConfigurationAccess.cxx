@@ -2,13 +2,9 @@
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  * 
- * Copyright 2008 by Sun Microsystems, Inc.
+ * Copyright 2000, 2010 Oracle and/or its affiliates.
  *
  * OpenOffice.org - a multi-platform office productivity suite
- *
- * $RCSfile: PresenterConfigurationAccess.cxx,v $
- *
- * $Revision: 1.5 $
  *
  * This file is part of OpenOffice.org.
  *
@@ -84,7 +80,7 @@ PresenterConfigurationAccess::PresenterConfigurationAccess (
                 sAccessService = A2S("com.sun.star.configuration.ConfigurationAccess");
             else
                 sAccessService = A2S("com.sun.star.configuration.ConfigurationUpdateAccess");
-            
+
             Reference<lang::XMultiServiceFactory> xProvider (
                 xFactory->createInstanceWithContext(
                     A2S("com.sun.star.configuration.ConfigurationProvider"),
