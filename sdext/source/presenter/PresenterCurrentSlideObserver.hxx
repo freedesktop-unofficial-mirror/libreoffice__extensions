@@ -35,7 +35,7 @@
 #include <cppuhelper/compbase1.hxx>
 #include <cppuhelper/basemutex.hxx>
 #include <rtl/ref.hxx>
-#include <vos/timer.hxx>
+#include <salhelper/timer.hxx>
 
 namespace css = ::com::sun::star;
 
@@ -50,7 +50,7 @@ namespace {
 /** Check periodically the slide show controller and the
     frame::XController whether the current slide has changed.  If so,
     then inform the presenter controller about it.
-    
+
     Objects of this class have their own lifetime control and destroy
     themselves when the presenter controller is diposed.
 */
