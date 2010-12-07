@@ -2,7 +2,7 @@
  /*************************************************************************
  *
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
- * 
+ *
  * Copyright 2000, 2010 Oracle and/or its affiliates.
  *
  * OpenOffice.org - a multi-platform office productivity suite
@@ -269,13 +269,13 @@ void InformationDialog::InitDialog()
         Any( sal_Int32( 115 ) ),
         Any( getString( STR_SUN_OPTIMIZATION_WIZARD2 ) ),
         Any( sal_Int32( DIALOG_WIDTH ) ) };
-    
+
     sal_Int32 nCount = SAL_N_ELEMENTS( pNames );
 
     Sequence< rtl::OUString >	aNames( pNames, nCount );
     Sequence< Any >				aValues( pValues, nCount );
 
-    mxDialogModelMultiPropertySet->setPropertyValues( aNames, aValues ); 
+    mxDialogModelMultiPropertySet->setPropertyValues( aNames, aValues );
 
     sal_Int64 nSource = mnSourceSize;
     sal_Int64 nDest   = mnDestSize;
@@ -322,7 +322,8 @@ void InformationDialog::InitDialog()
     OUString aInfoString( getString( eInfoString ) );
     const OUString aOldSizePlaceholder( RTL_CONSTASCII_USTRINGPARAM( "%OLDFILESIZE" ) );
     const OUString aNewSizePlaceholder( RTL_CONSTASCII_USTRINGPARAM( "%NEWFILESIZE" ) );
-    const OUString aTitlePlaceholder( aTitle.getLength() ? RTL_CONSTASCII_USTRINGPARAM("%TITLE") : RTL_CONSTASCII_USTRINGPARAM("'%TITLE'") );
+    const OUString aTitlePlaceholder( aTitle.getLength() ? OUString::createFromAscii("%TITLE"  )
+                                                         : OUString::createFromAscii("'%TITLE'") );
 
     sal_Int32 i = aInfoString.indexOf( aOldSizePlaceholder, 0 );
     if ( i >= 0 )
@@ -336,7 +337,7 @@ void InformationDialog::InitDialog()
     if ( k >= 0 )
         aInfoString = aInfoString.replaceAt( k, aTitlePlaceholder.getLength(), aTitle );
 
-    com::sun::star::uno::Reference< com::sun::star::awt::XItemListener > xItemListener; 
+    com::sun::star::uno::Reference< com::sun::star::awt::XItemListener > xItemListener;
     InsertImage( *this, rtl::OUString( rtl::OUString(RTL_CONSTASCII_USTRINGPARAM("aboutimage")) ), ImpGetStandardImage( rtl::OUString(RTL_CONSTASCII_USTRINGPARAM("private:standardimage/query")) ), 5, 5, 25, 25 );
     InsertFixedText( *this, rtl::OUString( rtl::OUString(RTL_CONSTASCII_USTRINGPARAM("fixedtext")) ), aInfoString, PAGE_POS_X, 6, PAGE_WIDTH, 24, sal_True, 0 );
     if ( maSaveAsURL.getLength() )
@@ -364,7 +365,7 @@ InformationDialog::InformationDialog( const Reference< XComponentContext > &rxMS
     Reference< XFrame > xFrame( mxController->getFrame() );
     Reference< XWindow > xContainerWindow( xFrame->getContainerWindow() );
     Reference< XWindowPeer > xWindowPeer( xContainerWindow, UNO_QUERY_THROW );
-    createWindowPeer( xWindowPeer );		
+    createWindowPeer( xWindowPeer );
 
     InitDialog();
 }
