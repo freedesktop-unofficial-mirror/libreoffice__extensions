@@ -76,7 +76,7 @@ SHL1DEPN=
 SHL1IMPLIB=		i$(SHL1TARGET)
 SHL1LIBS=		$(SLB)$/$(TARGET).lib
 SHL1DEF=		$(MISC)$/$(SHL1TARGET).def
-SHL1VERSIONMAP=$(SOLARENV)/src/component.map
+SHL1VERSIONMAP=$(SOLARENV)/src/reg-component.map
 SHL1RPATH=      OXT
 DEF1NAME=		$(SHL1TARGET)
 
@@ -102,6 +102,10 @@ COMPONENT_BITMAPS= \
 
 COMPONENT_IMAGES=\
     $(EXTENSIONDIR)$/bitmaps$/extension_32.png
+
+COMPONENT_IMAGES=\
+    $(EXTENSIONDIR)$/bitmaps$/extension_32.png \
+    $(EXTENSIONDIR)$/bitmaps$/extension_32_h.png
 
 # rather freestyle or common to all?
 COMPONENT_HELP= \

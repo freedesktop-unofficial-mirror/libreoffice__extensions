@@ -40,15 +40,15 @@ TARGET=xpdflib
 
 .IF "$(SYSTEM_POPPLER)" == "YES"
 dummy:
-    @echo "An already available installation of poppler should exist on your system."
-    @echo "Therefore xpdf provided here does not need to be built in addition."
+	@echo "An already available installation of poppler should exist on your system."
+	@echo "Therefore xpdf provided here does not need to be built in addition."
 .ENDIF
 
 # --- Files --------------------------------------------------------
 
 TARFILE_NAME=xpdf-3.02
 TARFILE_MD5=599dc4cc65a07ee868cf92a667a913d2
-PATCH_FILES=$(TARFILE_NAME).patch
+PATCH_FILES=$(TARFILE_NAME).patch xpdf-3.02-sec.patch
 
 CONFIGURE_DIR=
 BUILD_DIR=$(CONFIGURE_DIR)
@@ -102,28 +102,28 @@ CONVERTFILES=ms_make.bat
 BUILD_FLAGS=
 
 OUT2INC= \
-    fofi$/*.h \
-    goo$/*.h  \
-    xpdf$/*.h \
-    aconf.h   \
-    aconf2.h
+	fofi$/*.h \
+	goo$/*.h  \
+	xpdf$/*.h \
+	aconf.h   \
+	aconf2.h
 
 .IF "$(GUI)"=="UNX"
 OUT2LIB= \
-    fofi$/lib*.a \
-    goo$/lib*.a \
-    xpdf$/lib*.a
+	fofi$/lib*.a \
+	goo$/lib*.a \
+	xpdf$/lib*.a
 .ELSE
 .IF "$(COM)"=="GCC"
 OUT2LIB= \
-    fofi$/lib*.a \
-    goo$/lib*.a \
-    xpdf$/lib*.a
+	fofi$/lib*.a \
+	goo$/lib*.a \
+	xpdf$/lib*.a
 .ELSE
 OUT2LIB= \
-    fofi$/*.lib \
-    goo$/*.lib \
-    xpdf$/*.lib
+	fofi$/*.lib \
+	goo$/*.lib \
+	xpdf$/*.lib
 .ENDIF
 .ENDIF
 

@@ -42,6 +42,7 @@ MAXLINELENGTH:=100000
 
 PACKAGE=com.sun.PresenterScreen-$(PLATFORMID)
 
+
 .IF "$(ENABLE_PRESENTER_SCREEN)" == "NO"
 @all:
     @echo "Presenter Screen build disabled."
@@ -108,7 +109,7 @@ SHL1DEPN=
 SHL1IMPLIB=		i$(SHL1TARGET)
 SHL1LIBS=		$(SLB)$/$(TARGET).lib
 SHL1DEF=		$(MISC)$/$(SHL1TARGET).def
-SHL1VERSIONMAP=$(SOLARENV)/src/component.map
+SHL1VERSIONMAP=$(SOLARENV)/src/reg-component.map
 SHL1RPATH=      OXT
 DEF1NAME=		$(SHL1TARGET)
 
@@ -125,6 +126,12 @@ ZIP1FLAGS=-r
 ZIP1LIST=		*
 
 DESCRIPTION:=$(ZIP1DIR)$/description.xml
+
+.IF "$(GUI)" == "WIN" || "$(GUI)" == "WNT"
+PACKLICS:=$(foreach,i,$(alllangiso) $(ZIP1DIR)$/registry$/license_$i)
+.ELSE
+PACKLICS:=$(foreach,i,$(alllangiso) $(ZIP1DIR)$/registry$/LICENSE_$i)
+.ENDIF
 
 .IF "$(WITH_LANG)"==""
 FIND_XCU=registry/data
@@ -241,6 +248,7 @@ COMPONENT_BITMAPS=												\
 COMPONENT_IMAGES=\
     $(ZIP1DIR)$/bitmaps$/extension_32.png
 
+
 COMPONENT_MANIFEST= 							\
     $(ZIP1DIR)$/META-INF$/manifest.xml
 
@@ -299,7 +307,10 @@ $(ZIP1DIR)/help/%/com.sun.PresenterScreen-$(PLATFORMID)/presenter.xhp : $(COMMON
     @-$(MKDIRHIER) $(@:d)
     $(TYPE) $< | sed "s/PLATFORMID/$(PLATFORMID)/" | sed 's/@PRESENTEREXTENSIONPRODUCTNAME@/Presenter Console/g' > $@
 
+.IF "$(ZIP1TARGETN)"!=""
 $(ZIP1TARGETN) : $(HELPLINKALLTARGETS)
+
+.ENDIF          # "$(ZIP1TARGETN)"!=""
 
 $(COMPONENT_BITMAPS) : bitmaps$/$$(@:f)
     @-$(MKDIRHIER) $(@:d)
@@ -354,6 +365,16 @@ $(COMPONENT_LIBRARY) : $(DLLDEST)$/$$(@:f)
  .ENDIF	#"$(COM)"=="GCC"
 .ENDIF #"$(OS)$(CPU)"=="WNTI" && "$(WITH_EXTENSION_INTEGRATION)"!="YES"
 
+
+.IF "$(GUI)" == "WIN" || "$(GUI)" == "WNT"
+$(PACKLICS) : $(SOLARBINDIR)$/osl$/license$$(@:b:s/_/./:e:s/./_/)$$(@:e).txt
+    @@-$(MKDIRHIER) $(@:d)
+    $(GNUCOPY) $< $@
+.ELSE
+$(PACKLICS) : $(SOLARBINDIR)$/osl$/LICENSE$$(@:b:s/_/./:e:s/./_/)$$(@:e)
+    @@-$(MKDIRHIER) $(@:d)
+    $(GNUCOPY) $< $@
+.ENDIF
 
 
 $(ZIP1DIR)/%.xcu : %.xcu

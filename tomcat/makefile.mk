@@ -65,5 +65,5 @@ BUILD_ACTION=$(ANT) -Dant.build.javac.source=$(JAVA_SOURCE_VER) -Dant.build.java
 
 .ELSE
 @all:
-    @echo java disabled
+	@echo java disabled
 .ENDIF
