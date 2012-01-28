@@ -1,3 +1,0 @@
-nlpsolver	nlpsolver	:	javaunohelper unoil jurt NULL
-nlpsolver	nlpsolver		usr1	-	all	nlpsolver_mkout NULL
-nlpsolver	nlpsolver      nmake	-	all	nlpsolver_nlpsolver NULL
